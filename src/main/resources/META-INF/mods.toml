@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+
+[[mods]]
+    issueTrackerURL="https://github.com/BlakeBr0/MysticalAgriculture/issues"
+    modId="mysticalcustomization"
+    version="${file.jarVersion}"
+    displayName="Mystical Customization"
+    # updateJSONURL="http://myurl.me/"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/mystical-customization"
+    # logoFile="examplemod.png"
+    credits="BlakeBr0"
+    authors="BlakeBr0"
+    description='''
+    Allows modpack creators to add new content and modify existing content in Mystical Agriculture.
+    '''
+
+    [[dependencies.examplemod]]
+        modId="forge"
+        mandatory=true
+        versionRange="[31,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.examplemod]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.15.2]"
+        ordering="NONE"
+        side="BOTH"
