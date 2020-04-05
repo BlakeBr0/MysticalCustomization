@@ -6,8 +6,11 @@ import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropCreator;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.logging.log4j.LogManager;
@@ -16,9 +19,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CropLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
+    public static final Map<ICrop, ResourceLocation> CRUX_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/crops/").toFile();
@@ -58,5 +64,16 @@ public class CropLoader {
 
     public static void onPostRegisterCrops(ICropRegistry registry) {
 
+    }
+
+    public static void onCommonSetup() {
+        CRUX_MAP.forEach((crop, crux) -> {
+            Block block = ForgeRegistries.BLOCKS.getValue(crux);
+            if (block != Blocks.AIR) {
+                crop.setCrux(() -> block);
+            } else {
+                LOGGER.error("Could not find crux for crop {}", crop.getId());
+            }
+        });
     }
 }

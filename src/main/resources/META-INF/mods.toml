@@ -15,15 +15,27 @@ loaderVersion="[31,)"
     Allows modpack creators to add new content and modify existing content in Mystical Agriculture.
     '''
 
-    [[dependencies.examplemod]]
+    [[dependencies.mysticalcustomization]]
         modId="forge"
         mandatory=true
-        versionRange="[31,)"
+        versionRange="[31.1,)"
         ordering="NONE"
         side="BOTH"
-    [[dependencies.examplemod]]
+    [[dependencies.mysticalcustomization]]
         modId="minecraft"
         mandatory=true
-        versionRange="[1.15.2]"
+        versionRange="[1.15.2,1.16]"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.mysticalcustomization]]
+        modId="cucumber"
+        mandatory=true
+        versionRange="[3.0.3,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.mysticalcustomization]]
+        modId="mysticalagriculture"
+        mandatory=true
+        versionRange="[3.0.2,)"
         ordering="NONE"
         side="BOTH"

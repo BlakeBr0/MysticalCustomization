@@ -2,16 +2,19 @@ package com.blakebr0.mysticalcustomization.create;
 
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
+import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
 import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalagriculture.api.crop.ICrop;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
+import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 
 public class CropCreator {
     public static ICrop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
@@ -68,8 +71,37 @@ public class CropCreator {
                 int i = ParsingUtils.parseHex(color, "seeds");
                 crop.setSeedColor(i);
             }
-        } else {
-            throw new JsonSyntaxException("Missing 'color' or 'colors' property");
+        }
+
+        CropTextures ctextures = crop.getTextures()
+                .setFlowerTexture(CropTextures.FLOWER_INGOT_BLANK)
+                .setEssenceTexture(CropTextures.ESSENCE_INGOT_BLANK)
+                .setSeedTexture(CropTextures.SEED_BLANK);
+
+        if (json.has("textures")) {
+            JsonObject textures = JSONUtils.getJsonObject(json, "textures");
+            if (textures.has("flower")) {
+                String texture = JSONUtils.getString(textures, "flower");
+                ResourceLocation location = new ResourceLocation(texture);
+                ctextures.setFlowerTexture(location);
+            }
+
+            if (textures.has("essence")) {
+                String texture = JSONUtils.getString(textures, "essence");
+                ResourceLocation location = new ResourceLocation(texture);
+                ctextures.setEssenceTexture(location);
+            }
+
+            if (textures.has("seeds")) {
+                String texture = JSONUtils.getString(textures, "seeds");
+                ResourceLocation location = new ResourceLocation(texture);
+                ctextures.setSeedTexture(location);
+            }
+        }
+
+        if (json.has("name")) {
+            String name = JSONUtils.getString(json, "name");
+            crop.setDisplayName(new StringTextComponent(name));
         }
 
         if (json.has("enabled")) {
@@ -78,7 +110,8 @@ public class CropCreator {
         }
 
         if (json.has("crux")) {
-            // TODO: crux
+            String crux = JSONUtils.getString(json, "crux");
+            CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
         }
 
         return crop;
