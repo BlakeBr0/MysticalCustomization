@@ -4,6 +4,9 @@ import com.blakebr0.mysticalagriculture.api.crop.ICrop;
 import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropCreator;
+import com.blakebr0.mysticalcustomization.modify.CropModifier;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.block.Block;
@@ -19,11 +22,15 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CropLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<ICrop, ResourceLocation> CRUX_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
@@ -63,7 +70,42 @@ public class CropLoader {
     }
 
     public static void onPostRegisterCrops(ICropRegistry registry) {
+        File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
+        if (!dir.exists() && dir.mkdirs()) {
+            LOGGER.info("Created /config/mysticalcustomization/ directory");
+        }
 
+        File file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-crops.json").toFile();
+        if (file.exists() && file.isFile()) {
+            JsonObject json;
+            FileReader reader = null;
+            try {
+                JsonParser parser = new JsonParser();
+                reader = new FileReader(file);
+                json = parser.parse(reader).getAsJsonObject();
+
+                json.entrySet().forEach(entry -> {
+                    String id = entry.getKey();
+                    JsonObject changes = entry.getValue().getAsJsonObject();
+                    ICrop crop = registry.getCropById(new ResourceLocation(id));
+
+                    CropModifier.modify(crop, changes);
+                });
+
+                reader.close();
+            } catch (Exception e) {
+                LOGGER.error("An error occurred while reading configure-crops.json", e);
+            } finally {
+                IOUtils.closeQuietly(reader);
+            }
+        } else {
+            try (Writer writer = new FileWriter(file)) {
+                JsonObject object = new JsonObject();
+                GSON.toJson(object, writer);
+            } catch (IOException e) {
+                LOGGER.error("An error occurred while creating configure-crops.json", e);
+            }
+        }
     }
 
     public static void onCommonSetup() {
