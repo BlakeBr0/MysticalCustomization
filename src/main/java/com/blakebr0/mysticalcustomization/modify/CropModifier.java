@@ -5,6 +5,7 @@ import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalagriculture.api.crop.ICrop;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
+import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -62,6 +63,11 @@ public class CropModifier {
         if (json.has("enabled")) {
             boolean enabled = JSONUtils.getBoolean(json, "enabled");
             crop.setEnabled(enabled);
+        }
+
+        if (json.has("crux")) {
+            String crux = JSONUtils.getString(json, "crux");
+            CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
         }
     }
 }
