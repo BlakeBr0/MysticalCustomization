@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
 public class CropModifier {
-    public static void modify(ICrop crop, JsonObject json) {
+    public static void modify(ICrop crop, JsonObject json) throws JsonSyntaxException {
         if (json.has("name")) {
             String name = JSONUtils.getString(json, "name");
             crop.setDisplayName(new StringTextComponent(name));

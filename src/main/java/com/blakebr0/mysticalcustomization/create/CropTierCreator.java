@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
 public class CropTierCreator {
-    public static CropTier create(ResourceLocation id, JsonObject json) {
+    public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         int value = JSONUtils.getInt(json, "value");
         String colorString = JSONUtils.getString(json, "color", "0xffffff");
         int color = ParsingUtils.parseHex(colorString, "color");
@@ -32,13 +32,13 @@ public class CropTierCreator {
             CropTierLoader.FARMLAND_MAP.put(tier, new ResourceLocation(blockId));
         }
 
-        if (json.has("ingredient")) {
-            JsonObject ingredient = JSONUtils.getJsonObject(json, "ingredient");
-            if (ingredient.has("item")) {
-                String itemId = JSONUtils.getString(ingredient, "item");
+        if (json.has("essence")) {
+            JsonObject essence = JSONUtils.getJsonObject(json, "essence");
+            if (essence.has("item")) {
+                String itemId = JSONUtils.getString(essence, "item");
                 CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
             } else {
-                throw new JsonSyntaxException("Ingredient must have an item property");
+                throw new JsonSyntaxException("Ingredient (essence) must have an item property");
             }
         }
 

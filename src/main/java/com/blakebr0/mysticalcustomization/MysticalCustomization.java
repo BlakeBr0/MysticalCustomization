@@ -2,6 +2,7 @@ package com.blakebr0.mysticalcustomization;
 
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
+import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +24,7 @@ public class MysticalCustomization {
     @SubscribeEvent
     public void onCommonSetup(FMLCommonSetupEvent event) {
         CropTierLoader.onCommonSetup();
+        CropTypeLoader.onCommonSetup();
         CropLoader.onCommonSetup();
     }
 

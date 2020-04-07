@@ -8,7 +8,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
 public class CropTierModifier {
-    public static void modify(CropTier tier, JsonObject json) {
+    public static void modify(CropTier tier, JsonObject json) throws JsonSyntaxException {
         if (json.has("fertilizable")) {
             boolean fertilizable = JSONUtils.getBoolean(json, "fertilizable");
             tier.setFertilizable(fertilizable);
@@ -24,13 +24,13 @@ public class CropTierModifier {
             CropTierLoader.FARMLAND_MAP.put(tier, new ResourceLocation(blockId));
         }
 
-        if (json.has("ingredient")) {
-            JsonObject ingredient = JSONUtils.getJsonObject(json, "ingredient");
-            if (ingredient.has("item")) {
-                String itemId = JSONUtils.getString(ingredient, "item");
+        if (json.has("essence")) {
+            JsonObject essence = JSONUtils.getJsonObject(json, "essence");
+            if (essence.has("item")) {
+                String itemId = JSONUtils.getString(essence, "item");
                 CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
             } else {
-                throw new JsonSyntaxException("Ingredient must have an item property");
+                throw new JsonSyntaxException("Ingredient (essence) must have an item property");
             }
         }
     }

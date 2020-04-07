@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MobSoulTypeCreator {
-    public static IMobSoulType create(ResourceLocation id, JsonObject json) {
+    public static IMobSoulType create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         float souls = JSONUtils.getFloat(json, "souls");
 
         MobSoulType type;
