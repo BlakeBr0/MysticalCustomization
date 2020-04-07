@@ -6,9 +6,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 
 public class CropTierModifier {
     public static void modify(CropTier tier, JsonObject json) throws JsonSyntaxException {
+        if (json.has("name")) {
+            String name = JSONUtils.getString(json, "name");
+            tier.setDisplayName(new StringTextComponent(name));
+        }
+
         if (json.has("fertilizable")) {
             boolean fertilizable = JSONUtils.getBoolean(json, "fertilizable");
             tier.setFertilizable(fertilizable);

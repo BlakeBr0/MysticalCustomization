@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class CropTierCreator {
@@ -16,6 +17,11 @@ public class CropTierCreator {
         int color = ParsingUtils.parseHex(colorString, "color");
 
         CropTier tier = new CropTier(id, value, color, TextFormatting.WHITE);
+
+        if (json.has("name")) {
+            String name = JSONUtils.getString(json, "name");
+            tier.setDisplayName(new StringTextComponent(name));
+        }
 
         if (json.has("fertilizable")) {
             boolean fertilizable = JSONUtils.getBoolean(json, "fertilizable");
