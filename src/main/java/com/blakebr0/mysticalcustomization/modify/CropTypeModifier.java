@@ -10,13 +10,8 @@ import net.minecraft.util.ResourceLocation;
 public class CropTypeModifier {
     public static void modify(CropType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("craftingSeed")) {
-            JsonObject craftingSeed = JSONUtils.getJsonObject(json, "craftingSeed");
-            if (craftingSeed.has("item")) {
-                String itemId = JSONUtils.getString(craftingSeed, "item");
-                CropTypeLoader.CRAFTING_SEED_MAP.put(type, new ResourceLocation(itemId));
-            } else {
-                throw new JsonSyntaxException("Ingredient (craftingSeed) must have an item property");
-            }
+            String itemId = JSONUtils.getString(json, "craftingSeed");
+            CropTypeLoader.CRAFTING_SEED_MAP.put(type, new ResourceLocation(itemId));
         }
     }
 }

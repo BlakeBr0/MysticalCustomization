@@ -31,13 +31,8 @@ public class CropTierModifier {
         }
 
         if (json.has("essence")) {
-            JsonObject essence = JSONUtils.getJsonObject(json, "essence");
-            if (essence.has("item")) {
-                String itemId = JSONUtils.getString(essence, "item");
-                CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
-            } else {
-                throw new JsonSyntaxException("Ingredient (essence) must have an item property");
-            }
+            String itemId = JSONUtils.getString(json, "essence");
+            CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
         }
     }
 }
