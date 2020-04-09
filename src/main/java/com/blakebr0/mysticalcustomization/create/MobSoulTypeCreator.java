@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,11 @@ public class MobSoulTypeCreator {
             String color = JSONUtils.getString(json, "color");
             int i = ParsingUtils.parseHex(color, "color");
             type.setColor(i);
+        }
+
+        if (json.has("name")) {
+            String name = JSONUtils.getString(json, "name");
+            type.setEntityDisplayName(new StringTextComponent(name));
         }
 
         return type;
