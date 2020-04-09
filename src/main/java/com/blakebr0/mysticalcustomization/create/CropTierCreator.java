@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 public class CropTierCreator {
     public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         int value = JSONUtils.getInt(json, "value");
-        String colorString = JSONUtils.getString(json, "color", "0xffffff");
+        String colorString = JSONUtils.getString(json, "color", "ffffff");
         int color = ParsingUtils.parseHex(colorString, "color");
 
         CropTier tier = new CropTier(id, value, color, TextFormatting.WHITE);
