@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[32,)"
 
 [[mods]]
     issueTrackerURL="https://github.com/BlakeBr0/MysticalAgriculture/issues"
@@ -18,24 +18,24 @@ loaderVersion="[31,)"
     [[dependencies.mysticalcustomization]]
         modId="forge"
         mandatory=true
-        versionRange="[31.1,)"
+        versionRange="[32.0,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.mysticalcustomization]]
         modId="minecraft"
         mandatory=true
-        versionRange="[1.15.2,1.16]"
+        versionRange="[1.16.1,1.17]"
         ordering="NONE"
         side="BOTH"
     [[dependencies.mysticalcustomization]]
         modId="cucumber"
         mandatory=true
-        versionRange="[3.0.3,)"
+        versionRange="[4.0.0,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.mysticalcustomization]]
         modId="mysticalagriculture"
         mandatory=true
-        versionRange="[3.0.2,)"
+        versionRange="[4.0.0,)"
         ordering="NONE"
         side="BOTH"
