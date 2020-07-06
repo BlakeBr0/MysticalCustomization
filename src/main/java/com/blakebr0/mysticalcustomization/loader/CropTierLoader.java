@@ -31,7 +31,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CropTierLoader {
+public final class CropTierLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<CropTier, ResourceLocation> FARMLAND_MAP = new HashMap<>();

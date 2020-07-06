@@ -28,7 +28,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CropLoader {
+public final class CropLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<ICrop, ResourceLocation> CRUX_MAP = new HashMap<>();

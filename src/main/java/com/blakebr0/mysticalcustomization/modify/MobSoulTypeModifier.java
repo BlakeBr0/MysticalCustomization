@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.text.StringTextComponent;
 
-public class MobSoulTypeModifier {
+public final class MobSoulTypeModifier {
     public static void modify(IMobSoulType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("souls")) {
             float souls = JSONUtils.getFloat(json, "souls");

@@ -29,7 +29,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CropTypeLoader {
+public final class CropTypeLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<CropType, ResourceLocation> CRAFTING_SEED_MAP = new HashMap<>();

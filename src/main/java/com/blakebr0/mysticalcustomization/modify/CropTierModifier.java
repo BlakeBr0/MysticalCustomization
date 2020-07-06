@@ -8,7 +8,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
-public class CropTierModifier {
+public final class CropTierModifier {
     public static void modify(CropTier tier, JsonObject json) throws JsonSyntaxException {
         if (json.has("name")) {
             String name = JSONUtils.getString(json, "name");

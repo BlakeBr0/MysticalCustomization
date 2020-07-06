@@ -10,7 +10,7 @@ import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
 import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
 
 @MysticalAgriculturePlugin
-public class ModCorePlugin implements IMysticalAgriculturePlugin {
+public final class ModCorePlugin implements IMysticalAgriculturePlugin {
     @Override
     public void onRegisterCrops(ICropRegistry registry) {
         CropTierLoader.onRegisterCrops();

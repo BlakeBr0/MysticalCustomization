@@ -13,7 +13,7 @@ import net.minecraft.util.text.StringTextComponent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MobSoulTypeCreator {
+public final class MobSoulTypeCreator {
     public static IMobSoulType create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         float souls = JSONUtils.getFloat(json, "souls");
 

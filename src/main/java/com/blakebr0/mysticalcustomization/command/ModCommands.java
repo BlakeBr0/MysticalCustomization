@@ -13,7 +13,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 import java.util.stream.Collectors;
 
-public class ModCommands {
+public final class ModCommands {
     public static final LiteralArgumentBuilder<CommandSource> ROOT = Commands.literal(MysticalCustomization.MOD_ID);
 
     public static void onServerStarting(CommandDispatcher<CommandSource> dispatcher) {

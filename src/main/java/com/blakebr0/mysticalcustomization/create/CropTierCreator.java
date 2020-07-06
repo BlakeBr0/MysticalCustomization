@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-public class CropTierCreator {
+public final class CropTierCreator {
     public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         int value = JSONUtils.getInt(json, "value");
         String colorString = JSONUtils.getString(json, "color", "ffffff");

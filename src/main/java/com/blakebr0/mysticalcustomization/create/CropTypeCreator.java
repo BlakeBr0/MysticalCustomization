@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
-public class CropTypeCreator {
+public final class CropTypeCreator {
     public static CropType create(String name, JsonObject json) throws JsonSyntaxException {
         JsonObject textures = JSONUtils.getJsonObject(json, "textures");
         String stem = JSONUtils.getString(textures, "stem");

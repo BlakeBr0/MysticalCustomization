@@ -16,7 +16,7 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
-public class CropCreator {
+public final class CropCreator {
     public static ICrop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         String tierId = JSONUtils.getString(json, "tier");
         String typeId = JSONUtils.getString(json, "type");

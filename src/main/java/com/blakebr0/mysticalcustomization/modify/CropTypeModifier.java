@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
-public class CropTypeModifier {
+public final class CropTypeModifier {
     public static void modify(CropType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("craftingSeed")) {
             String itemId = JSONUtils.getString(json, "craftingSeed");

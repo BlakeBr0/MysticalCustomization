@@ -13,7 +13,7 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(MysticalCustomization.MOD_ID)
-public class MysticalCustomization {
+public final class MysticalCustomization {
     public static final String MOD_ID = "mysticalcustomization";
     public static final String NAME = "Mystical Customization";
 
