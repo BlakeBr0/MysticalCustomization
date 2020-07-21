@@ -10,13 +10,18 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.stream.Collectors;
 
 public final class ModCommands {
     public static final LiteralArgumentBuilder<CommandSource> ROOT = Commands.literal(MysticalCustomization.MOD_ID);
 
-    public static void onServerStarting(CommandDispatcher<CommandSource> dispatcher) {
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+
         dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermissionLevel(4)).executes(context -> {
             String tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
                     .map(CropTier::getId)
