@@ -69,5 +69,10 @@ public final class CropModifier {
             String crux = JSONUtils.getString(json, "crux");
             CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
         }
+
+        if (json.has("glint")) {
+            boolean glint = JSONUtils.getBoolean(json, "glint");
+            crop.setHasEffect(glint);
+        }
     }
 }
