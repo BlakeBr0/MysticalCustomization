@@ -44,6 +44,11 @@ public final class MobSoulTypeCreator {
             type.setEntityDisplayName(new StringTextComponent(name));
         }
 
+        if (json.has("enabled")) {
+            boolean enabled = JSONUtils.getBoolean(json, "enabled");
+            type.setEnabled(enabled);
+        }
+
         return type;
     }
 }
