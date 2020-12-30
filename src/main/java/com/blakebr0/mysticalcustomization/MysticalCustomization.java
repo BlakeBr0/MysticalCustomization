@@ -27,8 +27,10 @@ public final class MysticalCustomization {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ModCommands());
 
-        CropTierLoader.onCommonSetup();
-        CropTypeLoader.onCommonSetup();
-        CropLoader.onCommonSetup();
+        event.enqueueWork(() -> {
+            CropTierLoader.onCommonSetup();
+            CropTypeLoader.onCommonSetup();
+            CropLoader.onCommonSetup();
+        });
     }
 }
