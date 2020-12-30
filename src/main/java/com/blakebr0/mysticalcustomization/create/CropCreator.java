@@ -9,6 +9,8 @@ import com.blakebr0.mysticalagriculture.api.crop.ICrop;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.nbt.CompoundNBT;
@@ -117,6 +119,14 @@ public final class CropCreator {
         if (json.has("glint")) {
             boolean glint = JSONUtils.getBoolean(json, "glint");
             crop.setHasEffect(glint);
+        }
+
+        if (json.has("biomes")) {
+            JsonArray biomes = JSONUtils.getJsonArray(json, "biomes");
+
+            biomes.forEach(biome -> {
+                crop.addRequiredBiome(new ResourceLocation(biome.getAsString()));
+            });
         }
 
         return crop;
