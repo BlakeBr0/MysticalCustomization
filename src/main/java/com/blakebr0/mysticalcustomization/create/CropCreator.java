@@ -1,16 +1,11 @@
 package com.blakebr0.mysticalcustomization.create;
 
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
-import com.blakebr0.mysticalagriculture.api.crop.Crop;
-import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
-import com.blakebr0.mysticalagriculture.api.crop.CropTier;
-import com.blakebr0.mysticalagriculture.api.crop.CropType;
-import com.blakebr0.mysticalagriculture.api.crop.ICrop;
+import com.blakebr0.mysticalagriculture.api.crop.*;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,7 +17,6 @@ public final class CropCreator {
     public static ICrop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         String tierId = JSONUtils.getString(json, "tier");
         String typeId = JSONUtils.getString(json, "type");
-        JsonObject ingredient = JSONUtils.getJsonObject(json, "ingredient");
 
         CropTier tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(tierId));
         if (tier == null)
@@ -32,20 +26,24 @@ public final class CropCreator {
         if (type == null)
             throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
 
-        LazyIngredient material;
-        if (ingredient.has("tag")) {
-            String tag = JSONUtils.getString(ingredient, "tag");
-            material = LazyIngredient.tag(tag);
-        } else if (ingredient.has("item")) {
-            String item = JSONUtils.getString(ingredient, "item");
-            if (ingredient.has("nbt")) {
-                CompoundNBT nbt = ParsingUtils.parseNBT(ingredient);
-                material = LazyIngredient.item(item, nbt);
+        JsonObject ingredient = json.has("ingredient") ? JSONUtils.getJsonObject(json, "ingredient") : null;
+        LazyIngredient material = LazyIngredient.EMPTY;
+
+        if (ingredient != null) {
+            if (ingredient.has("tag")) {
+                String tag = JSONUtils.getString(ingredient, "tag");
+                material = LazyIngredient.tag(tag);
+            } else if (ingredient.has("item")) {
+                String item = JSONUtils.getString(ingredient, "item");
+                if (ingredient.has("nbt")) {
+                    CompoundNBT nbt = ParsingUtils.parseNBT(ingredient);
+                    material = LazyIngredient.item(item, nbt);
+                } else {
+                    material = LazyIngredient.item(item);
+                }
             } else {
-                material = LazyIngredient.item(item);
+                throw new JsonSyntaxException("Ingredient must have either 'item' or 'tag' property");
             }
-        } else {
-            throw new JsonSyntaxException("Ingredient must have either 'item' or 'tag' property");
         }
 
         Crop crop = new Crop(id, tier, type, material);
