@@ -136,12 +136,12 @@ public final class CropCreator {
         }
 
         if (isGarbageSeed(crop.getName())) {
-            RegistryObject<Item> item = RegistryObject.of(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+            RegistryObject<Item> essence = RegistryObject.of(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
 
-            item.updateReference(ForgeRegistries.ITEMS);
+            essence.updateReference(ForgeRegistries.ITEMS);
 
-            if (item.isPresent()) {
-                crop.setEssence(item);
+            if (essence.isPresent()) {
+                crop.setEssence(essence);
             } else {
                 LOGGER.error("Could not find the essence for crop {}", crop.getId());
             }
@@ -151,11 +151,10 @@ public final class CropCreator {
     }
 
     private static boolean isGarbageSeed(String name) {
-        return name.equals("inferium")
-                || name.equals("prudentium")
-                || name.equals("tertium")
-                || name.equals("imperium")
-                || name.equals("supremium")
-                || name.equals("fertilized");
+        return "prudentium".equals(name)
+                || "tertium".equals(name)
+                || "imperium".equals(name)
+                || "supremium".equals(name)
+                || "fertilized".equals(name);
     }
 }
