@@ -8,6 +8,7 @@ import com.blakebr0.mysticalcustomization.modify.CropTierModifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.block.Block;
@@ -79,6 +80,7 @@ public final class CropTierLoader {
         if (file.exists() && file.isFile()) {
             JsonObject json;
             FileReader reader = null;
+
             try {
                 JsonParser parser = new JsonParser();
                 reader = new FileReader(file);
@@ -88,6 +90,11 @@ public final class CropTierLoader {
                     String id = entry.getKey();
                     JsonObject changes = entry.getValue().getAsJsonObject();
                     CropTier tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(id));
+
+                    if (tier == null) {
+                        String error = String.format("Invalid crop tier id provided: %s", id);
+                        throw new JsonParseException(error);
+                    }
 
                     CropTierModifier.modify(tier, changes);
                 });

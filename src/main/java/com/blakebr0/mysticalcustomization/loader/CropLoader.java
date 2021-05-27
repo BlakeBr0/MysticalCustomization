@@ -8,6 +8,7 @@ import com.blakebr0.mysticalcustomization.modify.CropModifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -79,6 +80,7 @@ public final class CropLoader {
         if (file.exists() && file.isFile()) {
             JsonObject json;
             FileReader reader = null;
+
             try {
                 JsonParser parser = new JsonParser();
                 reader = new FileReader(file);
@@ -88,6 +90,11 @@ public final class CropLoader {
                     String id = entry.getKey();
                     JsonObject changes = entry.getValue().getAsJsonObject();
                     ICrop crop = registry.getCropById(new ResourceLocation(id));
+
+                    if (crop == null) {
+                        String error = String.format("Invalid crop id provided: %s", id);
+                        throw new JsonParseException(error);
+                    }
 
                     CropModifier.modify(crop, changes);
                 });

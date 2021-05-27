@@ -8,6 +8,7 @@ import com.blakebr0.mysticalcustomization.modify.MobSoulTypeModifier;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -73,6 +74,7 @@ public final class MobSoulTypeLoader {
         if (file.exists() && file.isFile()) {
             JsonObject json;
             FileReader reader = null;
+
             try {
                 JsonParser parser = new JsonParser();
                 reader = new FileReader(file);
@@ -82,6 +84,11 @@ public final class MobSoulTypeLoader {
                     String id = entry.getKey();
                     JsonObject changes = entry.getValue().getAsJsonObject();
                     IMobSoulType type = registry.getMobSoulTypeById(new ResourceLocation(id));
+
+                    if (type == null) {
+                        String error = String.format("Invalid mob soul type id provided: %s", id);
+                        throw new JsonParseException(error);
+                    }
 
                     MobSoulTypeModifier.modify(type, changes);
                 });
