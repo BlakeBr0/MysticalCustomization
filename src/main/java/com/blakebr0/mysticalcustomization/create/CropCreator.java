@@ -3,17 +3,25 @@ package com.blakebr0.mysticalcustomization.create;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.*;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
+import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class CropCreator {
+    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
+
     public static ICrop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         String tierId = JSONUtils.getString(json, "tier");
         String typeId = JSONUtils.getString(json, "type");
@@ -127,6 +135,27 @@ public final class CropCreator {
             });
         }
 
+        if (isGarbageSeed(crop.getName())) {
+            RegistryObject<Item> item = RegistryObject.of(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+
+            item.updateReference(ForgeRegistries.ITEMS);
+
+            if (item.isPresent()) {
+                crop.setEssence(item);
+            } else {
+                LOGGER.error("Could not find the essence for crop {}", crop.getId());
+            }
+        }
+
         return crop;
+    }
+
+    private static boolean isGarbageSeed(String name) {
+        return name.equals("inferium")
+                || name.equals("prudentium")
+                || name.equals("tertium")
+                || name.equals("imperium")
+                || name.equals("supremium")
+                || name.equals("fertilized");
     }
 }
