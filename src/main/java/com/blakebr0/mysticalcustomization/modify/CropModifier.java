@@ -49,7 +49,7 @@ public final class CropModifier {
             } else if (ingredient.has("item")) {
                 String item = JSONUtils.getString(ingredient, "item");
                 if (ingredient.has("nbt")) {
-                    CompoundNBT nbt = ParsingUtils.parseNBT(ingredient);
+                    CompoundNBT nbt = ParsingUtils.parseNBT(ingredient.get("nbt"));
                     material = LazyIngredient.item(item, nbt);
                 } else {
                     material = LazyIngredient.item(item);
