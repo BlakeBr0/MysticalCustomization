@@ -23,10 +23,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class MobSoulTypeLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    public static final Map<IMobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
 
     public static void onRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
         File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/mobsoultypes/").toFile();
@@ -107,5 +111,15 @@ public final class MobSoulTypeLoader {
                 LOGGER.error("An error occurred while creating configure-mobsoultypes.json", e);
             }
         }
+
+        ENTITY_ADDITIONS_MAP.forEach((type, entities) -> {
+            entities.forEach(entity -> {
+                boolean success = registry.addEntityTo(type, entity);
+
+                if (!success) {
+                    LOGGER.error("Could not add entity {} to mob soul type {}, maybe it's already in use?", entity, type.getId());
+                }
+            });
+        });
     }
 }
