@@ -23,9 +23,9 @@ public final class ParsingUtils {
     public static CompoundNBT parseNBT(JsonElement json) {
         try {
             if (json.isJsonObject()) {
-                return JsonToNBT.getTagFromJson(GSON.toJson(json));
+                return JsonToNBT.parseTag(GSON.toJson(json));
             } else {
-                return JsonToNBT.getTagFromJson(JSONUtils.getString(json, "nbt"));
+                return JsonToNBT.parseTag(JSONUtils.convertToString(json, "nbt"));
             }
         } catch (CommandSyntaxException e) {
             throw new JsonSyntaxException("Invalid NBT entry: " + e.toString());

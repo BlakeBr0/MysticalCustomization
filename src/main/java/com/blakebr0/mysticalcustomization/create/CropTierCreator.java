@@ -12,34 +12,34 @@ import net.minecraft.util.text.TextFormatting;
 
 public final class CropTierCreator {
     public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
-        int value = JSONUtils.getInt(json, "value");
-        String colorString = JSONUtils.getString(json, "color", "ffffff");
+        int value = JSONUtils.getAsInt(json, "value");
+        String colorString = JSONUtils.getAsString(json, "color", "ffffff");
         int color = ParsingUtils.parseHex(colorString, "color");
 
         CropTier tier = new CropTier(id, value, color, TextFormatting.WHITE);
 
         if (json.has("name")) {
-            String name = JSONUtils.getString(json, "name");
+            String name = JSONUtils.getAsString(json, "name");
             tier.setDisplayName(new StringTextComponent(name));
         }
 
         if (json.has("fertilizable")) {
-            boolean fertilizable = JSONUtils.getBoolean(json, "fertilizable");
+            boolean fertilizable = JSONUtils.getAsBoolean(json, "fertilizable");
             tier.setFertilizable(fertilizable);
         }
 
         if (json.has("secondarySeedDrop")) {
-            boolean secondarySeedDrop = JSONUtils.getBoolean(json, "secondarySeedDrop");
+            boolean secondarySeedDrop = JSONUtils.getAsBoolean(json, "secondarySeedDrop");
             tier.setSecondarySeedDrop(secondarySeedDrop);
         }
 
         if (json.has("farmland")) {
-            String blockId = JSONUtils.getString(json, "farmland");
+            String blockId = JSONUtils.getAsString(json, "farmland");
             CropTierLoader.FARMLAND_MAP.put(tier, new ResourceLocation(blockId));
         }
 
         if (json.has("essence")) {
-            String itemId = JSONUtils.getString(json, "essence");
+            String itemId = JSONUtils.getAsString(json, "essence");
             CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
         }
 

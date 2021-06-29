@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public final class CropTypeModifier {
     public static void modify(CropType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("craftingSeed")) {
-            String itemId = JSONUtils.getString(json, "craftingSeed");
+            String itemId = JSONUtils.getAsString(json, "craftingSeed");
             CropTypeLoader.CRAFTING_SEED_MAP.put(type, new ResourceLocation(itemId));
         }
     }

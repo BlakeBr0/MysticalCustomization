@@ -22,23 +22,23 @@ public final class ModCommands {
     public void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
 
-        dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermissionLevel(4)).executes(context -> {
+        dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermission(4)).executes(context -> {
             String tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
                     .map(CropTier::getId)
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendFeedback(new StringTextComponent(tiers), false);
+            context.getSource().sendSuccess(new StringTextComponent(tiers), false);
 
             return 0;
         })));
 
-        dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.hasPermissionLevel(4)).executes(context -> {
+        dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.hasPermission(4)).executes(context -> {
             String types = MysticalAgricultureAPI.CROP_TYPES.stream()
                     .map(CropType::getName)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendFeedback(new StringTextComponent(types), false);
+            context.getSource().sendSuccess(new StringTextComponent(types), false);
 
             return 0;
         })));

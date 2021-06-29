@@ -8,7 +8,7 @@ import net.minecraft.util.JSONUtils;
 public final class AugmentModifier {
     public static void modify(IAugment augment, JsonObject json) throws JsonSyntaxException {
         if (json.has("enabled")) {
-            boolean enabled = JSONUtils.getBoolean(json, "enabled");
+            boolean enabled = JSONUtils.getAsBoolean(json, "enabled");
             augment.setEnabled(enabled);
         }
     }

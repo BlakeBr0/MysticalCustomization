@@ -21,15 +21,15 @@ public final class MobSoulTypeModifier {
 
     public static void modify(IMobSoulType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("souls")) {
-            float souls = JSONUtils.getFloat(json, "souls");
+            float souls = JSONUtils.getAsFloat(json, "souls");
             type.setSoulRequirement(souls);
         }
 
         if (json.has("entities")) {
-            JsonObject entities = JSONUtils.getJsonObject(json, "entities");
+            JsonObject entities = JSONUtils.getAsJsonObject(json, "entities");
 
             if (entities.has("remove")) {
-                JsonArray remove = JSONUtils.getJsonArray(entities, "remove");
+                JsonArray remove = JSONUtils.getAsJsonArray(entities, "remove");
 
                 remove.forEach(entity -> {
                     boolean success = MysticalAgricultureAPI.getMobSoulTypeRegistry().removeEntityFrom(type, new ResourceLocation(entity.getAsString()));
@@ -41,7 +41,7 @@ public final class MobSoulTypeModifier {
             }
 
             if (entities.has("add")) {
-                JsonArray add = JSONUtils.getJsonArray(entities, "add");
+                JsonArray add = JSONUtils.getAsJsonArray(entities, "add");
 
                 add.forEach(entity -> {
                     MobSoulTypeLoader.ENTITY_ADDITIONS_MAP.computeIfAbsent(type, t -> new ArrayList<>()).add(new ResourceLocation(entity.getAsString()));
@@ -50,18 +50,18 @@ public final class MobSoulTypeModifier {
         }
 
         if (json.has("color")) {
-            String color = JSONUtils.getString(json, "color");
+            String color = JSONUtils.getAsString(json, "color");
             int i = ParsingUtils.parseHex(color, "color");
             type.setColor(i);
         }
 
         if (json.has("name")) {
-            String name = JSONUtils.getString(json, "name");
+            String name = JSONUtils.getAsString(json, "name");
             type.setEntityDisplayName(new StringTextComponent(name));
         }
 
         if (json.has("enabled")) {
-            boolean enabled = JSONUtils.getBoolean(json, "enabled");
+            boolean enabled = JSONUtils.getAsBoolean(json, "enabled");
             type.setEnabled(enabled);
         }
     }

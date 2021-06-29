@@ -23,8 +23,8 @@ public final class CropCreator {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
 
     public static ICrop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
-        String tierId = JSONUtils.getString(json, "tier");
-        String typeId = JSONUtils.getString(json, "type");
+        String tierId = JSONUtils.getAsString(json, "tier");
+        String typeId = JSONUtils.getAsString(json, "type");
 
         CropTier tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(tierId));
         if (tier == null)
@@ -34,15 +34,15 @@ public final class CropCreator {
         if (type == null)
             throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
 
-        JsonObject ingredient = json.has("ingredient") ? JSONUtils.getJsonObject(json, "ingredient") : null;
+        JsonObject ingredient = json.has("ingredient") ? JSONUtils.getAsJsonObject(json, "ingredient") : null;
         LazyIngredient material = LazyIngredient.EMPTY;
 
         if (ingredient != null) {
             if (ingredient.has("tag")) {
-                String tag = JSONUtils.getString(ingredient, "tag");
+                String tag = JSONUtils.getAsString(ingredient, "tag");
                 material = LazyIngredient.tag(tag);
             } else if (ingredient.has("item")) {
-                String item = JSONUtils.getString(ingredient, "item");
+                String item = JSONUtils.getAsString(ingredient, "item");
                 if (ingredient.has("nbt")) {
                     CompoundNBT nbt = ParsingUtils.parseNBT(ingredient.get("nbt"));
                     material = LazyIngredient.item(item, nbt);
@@ -57,25 +57,25 @@ public final class CropCreator {
         Crop crop = new Crop(id, tier, type, material);
 
         if (json.has("color")) {
-            String color = JSONUtils.getString(json, "color");
+            String color = JSONUtils.getAsString(json, "color");
             int i = ParsingUtils.parseHex(color, "color");
             crop.setColor(i);
         } else if (json.has("colors")) {
-            JsonObject colors = JSONUtils.getJsonObject(json, "colors");
+            JsonObject colors = JSONUtils.getAsJsonObject(json, "colors");
             if (colors.has("flower")) {
-                String color = JSONUtils.getString(colors, "flower");
+                String color = JSONUtils.getAsString(colors, "flower");
                 int i = ParsingUtils.parseHex(color, "flower");
                 crop.setFlowerColor(i);
             }
 
             if (colors.has("essence")) {
-                String color = JSONUtils.getString(colors, "essence");
+                String color = JSONUtils.getAsString(colors, "essence");
                 int i = ParsingUtils.parseHex(color, "essence");
                 crop.setEssenceColor(i);
             }
 
             if (colors.has("seeds")) {
-                String color = JSONUtils.getString(colors, "seeds");
+                String color = JSONUtils.getAsString(colors, "seeds");
                 int i = ParsingUtils.parseHex(color, "seeds");
                 crop.setSeedColor(i);
             }
@@ -87,48 +87,48 @@ public final class CropCreator {
                 .setSeedTexture(CropTextures.SEED_BLANK);
 
         if (json.has("textures")) {
-            JsonObject textures = JSONUtils.getJsonObject(json, "textures");
+            JsonObject textures = JSONUtils.getAsJsonObject(json, "textures");
             if (textures.has("flower")) {
-                String texture = JSONUtils.getString(textures, "flower");
+                String texture = JSONUtils.getAsString(textures, "flower");
                 ResourceLocation location = new ResourceLocation(texture);
                 ctextures.setFlowerTexture(location);
             }
 
             if (textures.has("essence")) {
-                String texture = JSONUtils.getString(textures, "essence");
+                String texture = JSONUtils.getAsString(textures, "essence");
                 ResourceLocation location = new ResourceLocation(texture);
                 ctextures.setEssenceTexture(location);
             }
 
             if (textures.has("seeds")) {
-                String texture = JSONUtils.getString(textures, "seeds");
+                String texture = JSONUtils.getAsString(textures, "seeds");
                 ResourceLocation location = new ResourceLocation(texture);
                 ctextures.setSeedTexture(location);
             }
         }
 
         if (json.has("name")) {
-            String name = JSONUtils.getString(json, "name");
+            String name = JSONUtils.getAsString(json, "name");
             crop.setDisplayName(new StringTextComponent(name));
         }
 
         if (json.has("enabled")) {
-            boolean enabled = JSONUtils.getBoolean(json, "enabled");
+            boolean enabled = JSONUtils.getAsBoolean(json, "enabled");
             crop.setEnabled(enabled);
         }
 
         if (json.has("crux")) {
-            String crux = JSONUtils.getString(json, "crux");
+            String crux = JSONUtils.getAsString(json, "crux");
             CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
         }
 
         if (json.has("glint")) {
-            boolean glint = JSONUtils.getBoolean(json, "glint");
+            boolean glint = JSONUtils.getAsBoolean(json, "glint");
             crop.setHasEffect(glint);
         }
 
         if (json.has("biomes")) {
-            JsonArray biomes = JSONUtils.getJsonArray(json, "biomes");
+            JsonArray biomes = JSONUtils.getAsJsonArray(json, "biomes");
 
             biomes.forEach(biome -> {
                 crop.addRequiredBiome(new ResourceLocation(biome.getAsString()));
