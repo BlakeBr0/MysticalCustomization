@@ -6,21 +6,21 @@ import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.stream.Collectors;
 
 public final class ModCommands {
-    public static final LiteralArgumentBuilder<CommandSource> ROOT = Commands.literal(MysticalCustomization.MOD_ID);
+    public static final LiteralArgumentBuilder<CommandSourceStack> ROOT = Commands.literal(MysticalCustomization.MOD_ID);
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
         dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermission(4)).executes(context -> {
             String tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
@@ -28,7 +28,7 @@ public final class ModCommands {
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(new StringTextComponent(tiers), false);
+            context.getSource().sendSuccess(new TextComponent(tiers), false);
 
             return 0;
         })));
@@ -38,7 +38,7 @@ public final class ModCommands {
                     .map(CropType::getName)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(new StringTextComponent(types), false);
+            context.getSource().sendSuccess(new TextComponent(types), false);
 
             return 0;
         })));

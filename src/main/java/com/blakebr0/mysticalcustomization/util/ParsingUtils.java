@@ -5,9 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.util.GsonHelper;
 
 public final class ParsingUtils {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -20,12 +20,12 @@ public final class ParsingUtils {
         }
     }
 
-    public static CompoundNBT parseNBT(JsonElement json) {
+    public static CompoundTag parseNBT(JsonElement json) {
         try {
             if (json.isJsonObject()) {
-                return JsonToNBT.parseTag(GSON.toJson(json));
+                return TagParser.parseTag(GSON.toJson(json));
             } else {
-                return JsonToNBT.parseTag(JSONUtils.convertToString(json, "nbt"));
+                return TagParser.parseTag(GsonHelper.convertToString(json, "nbt"));
             }
         } catch (CommandSyntaxException e) {
             throw new JsonSyntaxException("Invalid NBT entry: " + e.toString());

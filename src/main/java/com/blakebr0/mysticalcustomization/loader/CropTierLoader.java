@@ -11,11 +11,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.block.Block;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.IOUtils;
@@ -118,8 +118,8 @@ public final class CropTierLoader {
     public static void onCommonSetup() {
         FARMLAND_MAP.forEach((tier, block) -> {
             Block farmland = ForgeRegistries.BLOCKS.getValue(block);
-            if (farmland instanceof FarmlandBlock) {
-                tier.setFarmland(() -> (FarmlandBlock) farmland);
+            if (farmland instanceof FarmBlock) {
+                tier.setFarmland(() -> (FarmBlock) farmland);
             } else {
                 LOGGER.error("Invalid farmland block provided");
             }
