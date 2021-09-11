@@ -4,12 +4,11 @@ import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -20,10 +19,10 @@ public final class ModCommands {
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        var dispatcher = event.getDispatcher();
 
         dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermission(4)).executes(context -> {
-            String tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
+            var tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
                     .map(CropTier::getId)
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
@@ -34,7 +33,7 @@ public final class ModCommands {
         })));
 
         dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.hasPermission(4)).executes(context -> {
-            String types = MysticalAgricultureAPI.CROP_TYPES.stream()
+            var types = MysticalAgricultureAPI.CROP_TYPES.stream()
                     .map(CropType::getName)
                     .collect(Collectors.joining("\n"));
 

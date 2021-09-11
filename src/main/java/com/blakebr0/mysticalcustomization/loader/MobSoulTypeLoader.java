@@ -1,7 +1,7 @@
 package com.blakebr0.mysticalcustomization.loader;
 
 import com.blakebr0.mysticalagriculture.api.registry.IMobSoulTypeRegistry;
-import com.blakebr0.mysticalagriculture.api.soul.IMobSoulType;
+import com.blakebr0.mysticalagriculture.api.soul.MobSoulType;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.MobSoulTypeCreator;
 import com.blakebr0.mysticalcustomization.modify.MobSoulTypeModifier;
@@ -17,12 +17,10 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,30 +28,31 @@ import java.util.Map;
 public final class MobSoulTypeLoader {
     private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    public static final Map<IMobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
+    public static final Map<MobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
 
     public static void onRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
-        File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/mobsoultypes/").toFile();
+        var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/mobsoultypes/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/mobsoultypes/ directory");
         }
 
-        File[] files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
+        var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
 
-        for (File file : files) {
+        for (var file : files) {
             JsonObject json;
             FileReader reader = null;
             ResourceLocation id = null;
-            IMobSoulType type = null;
+            MobSoulType type = null;
 
             try {
-                JsonParser parser = new JsonParser();
+                var parser = new JsonParser();
                 reader = new FileReader(file);
                 json = parser.parse(reader).getAsJsonObject();
-                String name = file.getName().replace(".json", "");
+                var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+
                 type = MobSoulTypeCreator.create(id, json);
 
                 reader.close();
@@ -69,28 +68,28 @@ public final class MobSoulTypeLoader {
     }
 
     public static void onPostRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
-        File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
+        var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/ directory");
         }
 
-        File file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-mobsoultypes.json").toFile();
+        var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-mobsoultypes.json").toFile();
         if (file.exists() && file.isFile()) {
             JsonObject json;
             FileReader reader = null;
 
             try {
-                JsonParser parser = new JsonParser();
+                var parser = new JsonParser();
                 reader = new FileReader(file);
                 json = parser.parse(reader).getAsJsonObject();
 
                 json.entrySet().forEach(entry -> {
-                    String id = entry.getKey();
-                    JsonObject changes = entry.getValue().getAsJsonObject();
-                    IMobSoulType type = registry.getMobSoulTypeById(new ResourceLocation(id));
+                    var id = entry.getKey();
+                    var changes = entry.getValue().getAsJsonObject();
+                    var type = registry.getMobSoulTypeById(new ResourceLocation(id));
 
                     if (type == null) {
-                        String error = String.format("Invalid mob soul type id provided: %s", id);
+                        var error = String.format("Invalid mob soul type id provided: %s", id);
                         throw new JsonParseException(error);
                     }
 
@@ -104,8 +103,8 @@ public final class MobSoulTypeLoader {
                 IOUtils.closeQuietly(reader);
             }
         } else {
-            try (Writer writer = new FileWriter(file)) {
-                JsonObject object = new JsonObject();
+            try (var writer = new FileWriter(file)) {
+                var object = new JsonObject();
                 GSON.toJson(object, writer);
             } catch (IOException e) {
                 LOGGER.error("An error occurred while creating configure-mobsoultypes.json", e);
@@ -114,7 +113,7 @@ public final class MobSoulTypeLoader {
 
         ENTITY_ADDITIONS_MAP.forEach((type, entities) -> {
             entities.forEach(entity -> {
-                boolean success = registry.addEntityTo(type, entity);
+                var success = registry.addEntityTo(type, entity);
 
                 if (!success) {
                     LOGGER.error("Could not add entity {} to mob soul type {}, maybe it's already in use?", entity, type.getId());

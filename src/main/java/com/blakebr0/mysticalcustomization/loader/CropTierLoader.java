@@ -11,11 +11,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.IOUtils;
@@ -23,12 +21,10 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,26 +35,27 @@ public final class CropTierLoader {
     public static final Map<CropTier, ResourceLocation> ESSENCE_MAP = new HashMap<>();
 
     public static void onRegisterCrops() {
-        File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/tiers/").toFile();
+        var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/tiers/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/tiers/ directory");
         }
 
-        File[] files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
+        var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
 
-        for (File file : files) {
+        for (var file : files) {
             JsonObject json;
             FileReader reader = null;
             ResourceLocation id = null;
 
             try {
-                JsonParser parser = new JsonParser();
+                var parser = new JsonParser();
                 reader = new FileReader(file);
                 json = parser.parse(reader).getAsJsonObject();
-                String name = file.getName().replace(".json", "");
+                var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+
                 CropTierCreator.create(id, json);
 
                 reader.close();
@@ -71,28 +68,28 @@ public final class CropTierLoader {
     }
 
     public static void onPostRegisterCrops() {
-        File dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
+        var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/ directory");
         }
 
-        File file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-tiers.json").toFile();
+        var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-tiers.json").toFile();
         if (file.exists() && file.isFile()) {
             JsonObject json;
             FileReader reader = null;
 
             try {
-                JsonParser parser = new JsonParser();
+                var parser = new JsonParser();
                 reader = new FileReader(file);
                 json = parser.parse(reader).getAsJsonObject();
 
                 json.entrySet().forEach(entry -> {
-                    String id = entry.getKey();
-                    JsonObject changes = entry.getValue().getAsJsonObject();
-                    CropTier tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(id));
+                    var id = entry.getKey();
+                    var changes = entry.getValue().getAsJsonObject();
+                    var tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(id));
 
                     if (tier == null) {
-                        String error = String.format("Invalid crop tier id provided: %s", id);
+                        var error = String.format("Invalid crop tier id provided: %s", id);
                         throw new JsonParseException(error);
                     }
 
@@ -106,8 +103,8 @@ public final class CropTierLoader {
                 IOUtils.closeQuietly(reader);
             }
         } else {
-            try (Writer writer = new FileWriter(file)) {
-                JsonObject object = new JsonObject();
+            try (var writer = new FileWriter(file)) {
+                var object = new JsonObject();
                 GSON.toJson(object, writer);
             } catch (IOException e) {
                 LOGGER.error("An error occurred while creating configure-tiers.json", e);
@@ -117,7 +114,7 @@ public final class CropTierLoader {
 
     public static void onCommonSetup() {
         FARMLAND_MAP.forEach((tier, block) -> {
-            Block farmland = ForgeRegistries.BLOCKS.getValue(block);
+            var farmland = ForgeRegistries.BLOCKS.getValue(block);
             if (farmland instanceof FarmBlock) {
                 tier.setFarmland(() -> (FarmBlock) farmland);
             } else {
@@ -126,7 +123,7 @@ public final class CropTierLoader {
         });
 
         ESSENCE_MAP.forEach((tier, item) -> {
-            Item essence = ForgeRegistries.ITEMS.getValue(item);
+            var essence = ForgeRegistries.ITEMS.getValue(item);
             if (essence != Items.AIR) {
                 tier.setEssence(() -> essence);
             } else {

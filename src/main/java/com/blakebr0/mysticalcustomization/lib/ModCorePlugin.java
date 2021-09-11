@@ -5,7 +5,11 @@ import com.blakebr0.mysticalagriculture.api.MysticalAgriculturePlugin;
 import com.blakebr0.mysticalagriculture.api.registry.IAugmentRegistry;
 import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalagriculture.api.registry.IMobSoulTypeRegistry;
-import com.blakebr0.mysticalcustomization.loader.*;
+import com.blakebr0.mysticalcustomization.loader.AugmentLoader;
+import com.blakebr0.mysticalcustomization.loader.CropLoader;
+import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
+import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
+import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
 
 @MysticalAgriculturePlugin
 public final class ModCorePlugin implements IMysticalAgriculturePlugin {
