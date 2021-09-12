@@ -22,7 +22,7 @@ public final class ModCommands {
         var dispatcher = event.getDispatcher();
 
         dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermission(4)).executes(context -> {
-            var tiers = MysticalAgricultureAPI.CROP_TIERS.stream()
+            var tiers = MysticalAgricultureAPI.getCropRegistry().getTiers().stream()
                     .map(CropTier::getId)
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
@@ -33,8 +33,9 @@ public final class ModCommands {
         })));
 
         dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.hasPermission(4)).executes(context -> {
-            var types = MysticalAgricultureAPI.CROP_TYPES.stream()
-                    .map(CropType::getName)
+            var types = MysticalAgricultureAPI.getCropRegistry().getTypes().stream()
+                    .map(CropType::getId)
+                    .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
             context.getSource().sendSuccess(new TextComponent(types), false);
