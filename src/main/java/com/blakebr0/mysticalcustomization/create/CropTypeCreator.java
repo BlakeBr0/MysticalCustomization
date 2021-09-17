@@ -12,7 +12,7 @@ public final class CropTypeCreator {
         var textures = GsonHelper.getAsJsonObject(json, "textures");
         var stem = GsonHelper.getAsString(textures, "stem");
 
-        var type = new CropType(name, new ResourceLocation(stem));
+        var type = new CropType(new ResourceLocation(name), new ResourceLocation(stem));
 
         if (json.has("craftingSeed")) {
             var itemId = GsonHelper.getAsString(json, "craftingSeed");

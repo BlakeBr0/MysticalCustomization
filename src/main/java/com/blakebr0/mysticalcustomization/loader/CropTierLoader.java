@@ -1,7 +1,7 @@
 package com.blakebr0.mysticalcustomization.loader;
 
-import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.CropTier;
+import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropTierCreator;
 import com.blakebr0.mysticalcustomization.modify.CropTierModifier;
@@ -34,7 +34,7 @@ public final class CropTierLoader {
     public static final Map<CropTier, ResourceLocation> FARMLAND_MAP = new HashMap<>();
     public static final Map<CropTier, ResourceLocation> ESSENCE_MAP = new HashMap<>();
 
-    public static void onRegisterCrops() {
+    public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/tiers/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/tiers/ directory");
@@ -48,6 +48,7 @@ public final class CropTierLoader {
             JsonObject json;
             FileReader reader = null;
             ResourceLocation id = null;
+            CropTier tier = null;
 
             try {
                 var parser = new JsonParser();
@@ -56,7 +57,7 @@ public final class CropTierLoader {
                 var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
 
-                CropTierCreator.create(id, json);
+                tier = CropTierCreator.create(id, json);
 
                 reader.close();
             } catch (Exception e) {
@@ -64,10 +65,13 @@ public final class CropTierLoader {
             } finally {
                 IOUtils.closeQuietly(reader);
             }
+
+            if (tier != null)
+                registry.registerTier(tier);
         }
     }
 
-    public static void onPostRegisterCrops() {
+    public static void onPostRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/ directory");
@@ -86,7 +90,7 @@ public final class CropTierLoader {
                 json.entrySet().forEach(entry -> {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(id));
+                    var tier = registry.getTierById(new ResourceLocation(id));
 
                     if (tier == null) {
                         var error = String.format("Invalid crop tier id provided: %s", id);
@@ -116,7 +120,7 @@ public final class CropTierLoader {
         FARMLAND_MAP.forEach((tier, block) -> {
             var farmland = ForgeRegistries.BLOCKS.getValue(block);
             if (farmland instanceof FarmBlock) {
-                tier.setFarmland(() -> (FarmBlock) farmland);
+                tier.setFarmland(() -> farmland);
             } else {
                 LOGGER.error("Invalid farmland block provided");
             }

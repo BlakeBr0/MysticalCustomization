@@ -15,15 +15,15 @@ import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
 public final class ModCorePlugin implements IMysticalAgriculturePlugin {
     @Override
     public void onRegisterCrops(ICropRegistry registry) {
-        CropTierLoader.onRegisterCrops();
-        CropTypeLoader.onRegisterCrops();
+        CropTierLoader.onRegisterCrops(registry);
+        CropTypeLoader.onRegisterCrops(registry);
         CropLoader.onRegisterCrops(registry);
     }
 
     @Override
     public void onPostRegisterCrops(ICropRegistry registry) {
-        CropTierLoader.onPostRegisterCrops();
-        CropTypeLoader.onPostRegisterCrops();
+        CropTierLoader.onPostRegisterCrops(registry);
+        CropTypeLoader.onPostRegisterCrops(registry);
         CropLoader.onPostRegisterCrops(registry);
     }
 

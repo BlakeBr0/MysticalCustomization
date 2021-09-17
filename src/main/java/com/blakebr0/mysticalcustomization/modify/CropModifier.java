@@ -20,7 +20,7 @@ public final class CropModifier {
 
         if (json.has("tier")) {
             var tierId = GsonHelper.getAsString(json, "tier");
-            var tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(tierId));
+            var tier = MysticalAgricultureAPI.getCropRegistry().getTierById(new ResourceLocation(tierId));
             if (tier == null)
                 throw new JsonSyntaxException("Invalid crop tier provided: " + tierId);
 
@@ -29,7 +29,7 @@ public final class CropModifier {
 
         if (json.has("type")) {
             var typeId = GsonHelper.getAsString(json, "type");
-            var type = MysticalAgricultureAPI.getCropTypeByName(typeId);
+            var type = MysticalAgricultureAPI.getCropRegistry().getTypeById(new ResourceLocation(typeId));
             if (type == null)
                 throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
 

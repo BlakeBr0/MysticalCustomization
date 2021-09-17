@@ -24,11 +24,11 @@ public final class CropCreator {
         var tierId = GsonHelper.getAsString(json, "tier");
         var typeId = GsonHelper.getAsString(json, "type");
 
-        var tier = MysticalAgricultureAPI.getCropTierById(new ResourceLocation(tierId));
+        var tier = MysticalAgricultureAPI.getCropRegistry().getTierById(new ResourceLocation(tierId));
         if (tier == null)
             throw new JsonSyntaxException("Invalid crop tier provided: " + tierId);
 
-        var type = MysticalAgricultureAPI.getCropTypeByName(typeId);
+        var type = MysticalAgricultureAPI.getCropRegistry().getTypeById(new ResourceLocation(typeId));
         if (type == null)
             throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
 
@@ -97,8 +97,9 @@ public final class CropCreator {
             }
 
             if (textures.has("essence")) {
-                String texture = GsonHelper.getAsString(textures, "essence");
-                ResourceLocation location = new ResourceLocation(texture);
+                var texture = GsonHelper.getAsString(textures, "essence");
+                var location = new ResourceLocation(texture);
+
                 ctextures.setEssenceTexture(location);
             }
 

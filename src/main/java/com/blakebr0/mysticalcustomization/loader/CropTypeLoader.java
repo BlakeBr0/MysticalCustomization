@@ -1,7 +1,7 @@
 package com.blakebr0.mysticalcustomization.loader;
 
-import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
+import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropTypeCreator;
 import com.blakebr0.mysticalcustomization.modify.CropTypeModifier;
@@ -32,7 +32,7 @@ public final class CropTypeLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<CropType, ResourceLocation> CRAFTING_SEED_MAP = new HashMap<>();
 
-    public static void onRegisterCrops() {
+    public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/types/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/types/ directory");
@@ -46,14 +46,16 @@ public final class CropTypeLoader {
             JsonObject json;
             FileReader reader = null;
             ResourceLocation id = null;
+            CropType type = null;
 
             try {
                 var parser = new JsonParser();
                 reader = new FileReader(file);
                 json = parser.parse(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
+                id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
 
-                CropTypeCreator.create(name, json);
+                type = CropTypeCreator.create(name, json);
 
                 reader.close();
             } catch (Exception e) {
@@ -61,10 +63,13 @@ public final class CropTypeLoader {
             } finally {
                 IOUtils.closeQuietly(reader);
             }
+
+            if (type != null)
+                registry.registerType(type);
         }
     }
 
-    public static void onPostRegisterCrops() {
+    public static void onPostRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             LOGGER.info("Created /config/mysticalcustomization/ directory");
@@ -83,7 +88,7 @@ public final class CropTypeLoader {
                 json.entrySet().forEach(entry -> {
                     var name = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var type = MysticalAgricultureAPI.getCropTypeByName(name);
+                    var type = registry.getTypeById(new ResourceLocation(name));
 
                     if (type == null) {
                         var error = String.format("Invalid crop type id provided: %s", name);
