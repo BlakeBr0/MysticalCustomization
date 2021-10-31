@@ -14,12 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public final class CropCreator {
-    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
-
     public static Crop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         var tierId = GsonHelper.getAsString(json, "tier");
         var typeId = GsonHelper.getAsString(json, "type");
@@ -147,7 +143,7 @@ public final class CropCreator {
             if (essence.isPresent()) {
                 crop.setEssenceItem(essence);
             } else {
-                LOGGER.error("Could not find the essence for crop {}", crop.getId());
+                MysticalCustomization.LOGGER.error("Could not find the essence for crop {}", crop.getId());
             }
         }
 

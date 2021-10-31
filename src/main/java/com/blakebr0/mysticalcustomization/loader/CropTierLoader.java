@@ -18,8 +18,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -29,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class CropTierLoader {
-    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<CropTier, ResourceLocation> FARMLAND_MAP = new HashMap<>();
     public static final Map<CropTier, ResourceLocation> ESSENCE_MAP = new HashMap<>();
@@ -37,7 +34,7 @@ public final class CropTierLoader {
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/tiers/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/tiers/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/tiers/ directory");
         }
 
         var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
@@ -61,7 +58,7 @@ public final class CropTierLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while creating crop tier with id {}", id, e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating crop tier with id {}", id, e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -74,7 +71,7 @@ public final class CropTierLoader {
     public static void onPostRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/ directory");
         }
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-tiers.json").toFile();
@@ -102,7 +99,7 @@ public final class CropTierLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while reading configure-tiers.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while reading configure-tiers.json", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -111,7 +108,7 @@ public final class CropTierLoader {
                 var object = new JsonObject();
                 GSON.toJson(object, writer);
             } catch (IOException e) {
-                LOGGER.error("An error occurred while creating configure-tiers.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating configure-tiers.json", e);
             }
         }
     }
@@ -122,7 +119,7 @@ public final class CropTierLoader {
             if (farmland instanceof FarmBlock) {
                 tier.setFarmland(() -> farmland);
             } else {
-                LOGGER.error("Invalid farmland block provided");
+                MysticalCustomization.LOGGER.error("Invalid farmland block provided");
             }
         });
 

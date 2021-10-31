@@ -16,8 +16,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -27,14 +25,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class CropLoader {
-    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<Crop, ResourceLocation> CRUX_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/crops/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/crops/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/crops/ directory");
         }
 
         var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
@@ -58,7 +55,7 @@ public final class CropLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while creating crop with id {}", id, e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", id, e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -71,7 +68,7 @@ public final class CropLoader {
     public static void onPostRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/ directory");
         }
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-crops.json").toFile();
@@ -99,7 +96,7 @@ public final class CropLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while reading configure-crops.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while reading configure-crops.json", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -108,7 +105,7 @@ public final class CropLoader {
                 var object = new JsonObject();
                 GSON.toJson(object, writer);
             } catch (IOException e) {
-                LOGGER.error("An error occurred while creating configure-crops.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating configure-crops.json", e);
             }
         }
     }
@@ -119,7 +116,7 @@ public final class CropLoader {
             if (block != Blocks.AIR) {
                 crop.setCruxBlock(() -> block);
             } else {
-                LOGGER.error("Could not find crux for crop {}", crop.getId());
+                MysticalCustomization.LOGGER.error("Could not find crux for crop {}", crop.getId());
             }
         });
     }

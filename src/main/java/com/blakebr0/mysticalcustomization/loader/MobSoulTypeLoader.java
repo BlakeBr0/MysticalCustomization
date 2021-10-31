@@ -14,8 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -26,14 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 public final class MobSoulTypeLoader {
-    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<MobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
 
     public static void onRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/mobsoultypes/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/mobsoultypes/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/mobsoultypes/ directory");
         }
 
         var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
@@ -57,7 +54,7 @@ public final class MobSoulTypeLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while creating mob soul type with id {}", id, e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating mob soul type with id {}", id, e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -70,7 +67,7 @@ public final class MobSoulTypeLoader {
     public static void onPostRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
-            LOGGER.info("Created /config/mysticalcustomization/ directory");
+            MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/ directory");
         }
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-mobsoultypes.json").toFile();
@@ -98,7 +95,7 @@ public final class MobSoulTypeLoader {
 
                 reader.close();
             } catch (Exception e) {
-                LOGGER.error("An error occurred while reading configure-mobsoultypes.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while reading configure-mobsoultypes.json", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -107,7 +104,7 @@ public final class MobSoulTypeLoader {
                 var object = new JsonObject();
                 GSON.toJson(object, writer);
             } catch (IOException e) {
-                LOGGER.error("An error occurred while creating configure-mobsoultypes.json", e);
+                MysticalCustomization.LOGGER.error("An error occurred while creating configure-mobsoultypes.json", e);
             }
         }
 
@@ -116,7 +113,7 @@ public final class MobSoulTypeLoader {
                 var success = registry.addEntityTo(type, entity);
 
                 if (!success) {
-                    LOGGER.error("Could not add entity {} to mob soul type {}, maybe it's already in use?", entity, type.getId());
+                    MysticalCustomization.LOGGER.error("Could not add entity {} to mob soul type {}, maybe it's already in use?", entity, type.getId());
                 }
             });
         });
