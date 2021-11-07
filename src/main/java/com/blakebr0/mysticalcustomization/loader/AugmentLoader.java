@@ -12,9 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public final class AugmentLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -28,11 +30,11 @@ public final class AugmentLoader {
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-augments.json").toFile();
         if (file.exists() && file.isFile()) {
             JsonObject json;
-            FileReader reader = null;
+            InputStreamReader reader = null;
 
             try {
                 var parser = new JsonParser();
-                reader = new FileReader(file);
+                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 json = parser.parse(reader).getAsJsonObject();
 
                 json.entrySet().forEach(entry -> {

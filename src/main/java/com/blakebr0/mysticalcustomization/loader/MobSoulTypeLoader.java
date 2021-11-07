@@ -16,9 +16,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +42,13 @@ public final class MobSoulTypeLoader {
 
         for (var file : files) {
             JsonObject json;
-            FileReader reader = null;
+            InputStreamReader reader = null;
             ResourceLocation id = null;
             MobSoulType type = null;
 
             try {
                 var parser = new JsonParser();
-                reader = new FileReader(file);
+                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 json = parser.parse(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
