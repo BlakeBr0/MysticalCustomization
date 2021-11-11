@@ -11,9 +11,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.1.6'
+version = '1.16.5-2.1.6'
 group = 'com.blakebr0.mysticalcustomization'
-archivesBaseName = 'MysticalCustomization-1.16.5'
+archivesBaseName = 'MysticalCustomization'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
@@ -96,13 +96,13 @@ dependencies {
 jar {
     manifest {
         attributes([
-                'Specification-Title': 'Cucumber',
-                'Specification-Vendor': 'BlakeBr0',
-                'Specification-Version': '1',
-                'Implementation-Title': project.name,
-                'Implementation-Version': "${archiveVersion}",
-                'Implementation-Vendor' : 'BlakeBr0',
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Specification-Title": "Mystical Customization",
+            "Specification-Vendor": "BlakeBr0",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version.split('-').last()}",
+            "Implementation-Vendor": "BlakeBr0",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
@@ -111,13 +111,23 @@ jar.finalizedBy('reobfJar')
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             artifact jar
         }
     }
+
     repositories {
         maven {
-            url "file://${project.projectDir}/mcmodsrepo"
+            url = 'https://maven.blakesmods.com'
+
+            credentials {
+                username = System.getenv('BLAKESMODS_MAVEN_USERNAME')
+                password = System.getenv('BLAKESMODS_MAVEN_PASSWORD')
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }
