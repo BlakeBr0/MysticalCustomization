@@ -12,8 +12,8 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class CropCreator {
     public static Crop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
