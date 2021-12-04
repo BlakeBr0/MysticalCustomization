@@ -115,11 +115,15 @@ public final class CropLoader {
 
     public static void onCommonSetup() {
         CRUX_MAP.forEach((crop, crux) -> {
-            var block = ForgeRegistries.BLOCKS.getValue(crux);
-            if (block != Blocks.AIR) {
-                crop.setCruxBlock(() -> block);
+            if (crux == null) {
+                crop.setCruxBlock(null);
             } else {
-                MysticalCustomization.LOGGER.error("Could not find crux for crop {}", crop.getId());
+                var block = ForgeRegistries.BLOCKS.getValue(crux);
+                if (block != Blocks.AIR) {
+                    crop.setCruxBlock(() -> block);
+                } else {
+                    MysticalCustomization.LOGGER.error("Could not find crux for crop {}", crop.getId());
+                }
             }
         });
     }
