@@ -120,11 +120,15 @@ public final class CropLoader {
 
     public static void onCommonSetup() {
         CRUX_MAP.forEach((crop, crux) -> {
-            Block block = ForgeRegistries.BLOCKS.getValue(crux);
-            if (block != Blocks.AIR) {
-                crop.setCrux(() -> block);
+            if (crux == null) {
+                crop.setCrux(null);
             } else {
-                LOGGER.error("Could not find crux for crop {}", crop.getId());
+                Block block = ForgeRegistries.BLOCKS.getValue(crux);
+                if (block != Blocks.AIR) {
+                    crop.setCrux(() -> block);
+                } else {
+                    LOGGER.error("Could not find crux for crop {}", crop.getId());
+                }
             }
         });
     }

@@ -67,8 +67,12 @@ public final class CropModifier {
         }
 
         if (json.has("crux")) {
-            String crux = JSONUtils.getAsString(json, "crux");
-            CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
+            if (json.get("crux").isJsonNull()) {
+                CropLoader.CRUX_MAP.put(crop, null);
+            } else {
+                String crux = JSONUtils.getAsString(json, "crux");
+                CropLoader.CRUX_MAP.put(crop, new ResourceLocation(crux));
+            }
         }
 
         if (json.has("glint")) {
