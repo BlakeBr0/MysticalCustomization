@@ -58,6 +58,11 @@ public final class CropModifier {
             crop.setCraftingMaterial(material);
         }
 
+        if (json.has("baseSecondaryChance")) {
+            var chance = GsonHelper.getAsDouble(json, "baseSecondaryChance");
+            crop.setBaseSecondaryChance(chance);
+        }
+
         if (json.has("enabled")) {
             var enabled = GsonHelper.getAsBoolean(json, "enabled");
             crop.setEnabled(enabled);

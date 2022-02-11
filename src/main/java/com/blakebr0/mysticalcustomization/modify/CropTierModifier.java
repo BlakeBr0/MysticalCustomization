@@ -25,6 +25,11 @@ public final class CropTierModifier {
             tier.setSecondarySeedDrop(secondarySeedDrop);
         }
 
+        if (json.has("baseSecondaryChance")) {
+            var chance = GsonHelper.getAsDouble(json, "baseSecondaryChance");
+            tier.setBaseSecondaryChance(chance);
+        }
+
         if (json.has("farmland")) {
             var blockId = GsonHelper.getAsString(json, "farmland");
             CropTierLoader.FARMLAND_MAP.put(tier, new ResourceLocation(blockId));
