@@ -145,9 +145,9 @@ public final class CropCreator {
 
             essence.updateReference(ForgeRegistries.ITEMS);
 
-            if (essence.isPresent()) {
-                crop.setEssenceItem(essence);
-            } else {
+            crop.setEssenceItem(essence);
+
+            if (!essence.isPresent()) {
                 MysticalCustomization.LOGGER.error("Could not find the essence for crop {}", crop.getId());
             }
         }
