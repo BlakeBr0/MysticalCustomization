@@ -9,14 +9,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(MysticalCustomization.MOD_ID)
 public final class MysticalCustomization {
     public static final String MOD_ID = "mysticalcustomization";
     public static final String NAME = "Mystical Customization";
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
     public MysticalCustomization() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();

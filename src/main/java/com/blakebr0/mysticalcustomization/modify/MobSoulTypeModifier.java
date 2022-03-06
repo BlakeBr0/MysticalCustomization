@@ -10,14 +10,10 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public final class MobSoulTypeModifier {
-    private static final Logger LOGGER = LogManager.getLogger(MysticalCustomization.NAME);
-
     public static void modify(MobSoulType type, JsonObject json) throws JsonSyntaxException {
         if (json.has("souls")) {
             var souls = GsonHelper.getAsFloat(json, "souls");
@@ -34,7 +30,7 @@ public final class MobSoulTypeModifier {
                     boolean success = MysticalAgricultureAPI.getMobSoulTypeRegistry().removeEntityFrom(type, new ResourceLocation(entity.getAsString()));
 
                     if (!success) {
-                        LOGGER.error("Could not remove entity {} from mob soul type {}, maybe it wasn't added?", entity.getAsString(), type.getId());
+                        MysticalCustomization.LOGGER.error("Could not remove entity {} from mob soul type {}, maybe it wasn't added?", entity.getAsString(), type.getId());
                     }
                 });
             }
