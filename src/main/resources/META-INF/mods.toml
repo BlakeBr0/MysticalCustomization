@@ -8,9 +8,9 @@ license="MIT"
     version="${file.jarVersion}"
     displayName="Mystical Customization"
     # updateJSONURL="http://myurl.me/"
-    displayURL="https://www.curseforge.com/minecraft/mc-mods/mystical-customization"
+    displayURL="https://blakesmods.com/mystical-customization"
     # logoFile="examplemod.png"
-    credits="BlakeBr0"
+    credits=""
     authors="BlakeBr0"
     description='''
     Allows modpack creators to add new content and modify existing content in Mystical Agriculture.
@@ -19,7 +19,7 @@ license="MIT"
     [[dependencies.mysticalcustomization]]
         modId="forge"
         mandatory=true
-        versionRange="[40.0,)"
+        versionRange="[40.0.12,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.mysticalcustomization]]
