@@ -12,6 +12,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -141,7 +142,13 @@ public final class CropCreator {
         }
 
         if (isGarbageSeed(crop.getName())) {
-            var essence = RegistryObject.of(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+            RegistryObject<Item> essence;
+
+            if ("insanium".equals(crop.getName())) {
+                essence = RegistryObject.create(new ResourceLocation("mysticalagradditions", crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+            } else {
+                essence = RegistryObject.create(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+            }
 
             essence.updateReference(ForgeRegistries.ITEMS);
 
@@ -160,6 +167,8 @@ public final class CropCreator {
                 || "tertium".equals(name)
                 || "imperium".equals(name)
                 || "supremium".equals(name)
+                || "awakened_supremium".equals(name)
+                || "insanium".equals(name)
                 || "fertilized".equals(name);
     }
 }
