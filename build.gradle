@@ -57,6 +57,10 @@ minecraft {
                 mysticalagriculture {
                     source project(':MysticalAgriculture').sourceSets.main
                 }
+
+                mysticalagradditions {
+                    source project(':MysticalAgradditions').sourceSets.main
+                }
             }
         }
 
@@ -82,6 +86,10 @@ minecraft {
                 mysticalagriculture {
                     source project(':MysticalAgriculture').sourceSets.main
                 }
+
+                mysticalagradditions {
+                    source project(':MysticalAgradditions').sourceSets.main
+                }
             }
         }
     }
@@ -92,6 +100,7 @@ dependencies {
 
     implementation project(':Cucumber')
     implementation project(':MysticalAgriculture')
+    implementation project(':MysticalAgradditions')
 
     runtimeOnly fg.deobf('mezz.jei:jei-1.18.2:9.4.1.117')
     runtimeOnly fg.deobf('curse.maven:jade-324717:3671210')

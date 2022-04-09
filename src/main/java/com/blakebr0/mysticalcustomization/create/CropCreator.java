@@ -159,6 +159,13 @@ public final class CropCreator {
             }
         }
 
+        if (json.has("essence")) {
+            var essence = GsonHelper.getAsString(json, "essence");
+            var item = RegistryObject.create(new ResourceLocation(essence), ForgeRegistries.ITEMS);
+
+            crop.setEssenceItem(item);
+        }
+
         return crop;
     }
 

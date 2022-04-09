@@ -10,6 +10,8 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class CropModifier {
     public static void modify(Crop crop, JsonObject json) throws JsonSyntaxException {
@@ -88,6 +90,13 @@ public final class CropModifier {
             biomes.forEach(biome -> {
                 crop.addRequiredBiome(new ResourceLocation(biome.getAsString()));
             });
+        }
+
+        if (json.has("essence")) {
+            var essence = GsonHelper.getAsString(json, "essence");
+            var item = RegistryObject.create(new ResourceLocation(essence), ForgeRegistries.ITEMS);
+
+            crop.setEssenceItem(item);
         }
     }
 }
