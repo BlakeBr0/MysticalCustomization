@@ -7,7 +7,7 @@ import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
@@ -53,7 +53,7 @@ public final class MobSoulTypeModifier {
 
         if (json.has("name")) {
             var name = GsonHelper.getAsString(json, "name");
-            type.setEntityDisplayName(new TextComponent(name));
+            type.setEntityDisplayName(Component.literal(name));
         }
 
         if (json.has("enabled")) {

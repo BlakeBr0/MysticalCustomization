@@ -7,7 +7,7 @@ import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public final class ModCommands {
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(new TextComponent(tiers), false);
+            context.getSource().sendSuccess(Component.literal(tiers), false);
 
             return 0;
         })));
@@ -38,7 +38,7 @@ public final class ModCommands {
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(new TextComponent(types), false);
+            context.getSource().sendSuccess(Component.literal(types), false);
 
             return 0;
         })));

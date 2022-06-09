@@ -7,7 +7,7 @@ import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,7 +17,7 @@ public final class CropModifier {
     public static void modify(Crop crop, JsonObject json) throws JsonSyntaxException {
         if (json.has("name")) {
             var name = GsonHelper.getAsString(json, "name");
-            crop.setDisplayName(new TextComponent(name));
+            crop.setDisplayName(Component.literal(name));
         }
 
         if (json.has("tier")) {

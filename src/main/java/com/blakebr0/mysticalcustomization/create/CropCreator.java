@@ -9,7 +9,7 @@ import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -110,7 +110,7 @@ public final class CropCreator {
 
         if (json.has("name")) {
             var name = GsonHelper.getAsString(json, "name");
-            crop.setDisplayName(new TextComponent(name));
+            crop.setDisplayName(Component.literal(name));
         }
 
         if (json.has("baseSecondaryChance")) {
@@ -149,8 +149,6 @@ public final class CropCreator {
             } else {
                 essence = RegistryObject.create(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
             }
-
-            essence.updateReference(ForgeRegistries.ITEMS);
 
             crop.setEssenceItem(essence);
 
