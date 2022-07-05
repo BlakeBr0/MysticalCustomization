@@ -79,7 +79,7 @@ public final class CropCreator {
             }
         }
 
-        CropTextures ctextures = crop.getTextures()
+        var ctextures = crop.getTextures()
                 .setFlowerTexture(CropTextures.FLOWER_INGOT_BLANK)
                 .setEssenceTexture(CropTextures.ESSENCE_INGOT_BLANK)
                 .setSeedTexture(CropTextures.SEED_BLANK);
@@ -164,6 +164,26 @@ public final class CropCreator {
             var item = RegistryObject.create(new ResourceLocation(essence), ForgeRegistries.ITEMS);
 
             crop.setEssenceItem(item);
+        }
+
+        if (json.has("recipes")) {
+            var recipes = GsonHelper.getAsJsonObject(json, "recipes");
+            var config = crop.getRecipeConfig();
+
+            if (recipes.has("crafting")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "crafting");
+                config.setSeedCraftingRecipeEnabled(enabled);
+            }
+
+            if (recipes.has("infusion")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "infusion");
+                config.setSeedInfusionRecipeEnabled(enabled);
+            }
+
+            if (recipes.has("reprocessor")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "reprocessor");
+                config.setSeedReprocessorRecipeEnabled(enabled);
+            }
         }
 
         return crop;

@@ -98,5 +98,25 @@ public final class CropModifier {
 
             crop.setEssenceItem(item);
         }
+
+        if (json.has("recipes")) {
+            var recipes = GsonHelper.getAsJsonObject(json, "recipes");
+            var config = crop.getRecipeConfig();
+
+            if (recipes.has("crafting")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "crafting");
+                config.setSeedCraftingRecipeEnabled(enabled);
+            }
+
+            if (recipes.has("infusion")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "infusion");
+                config.setSeedInfusionRecipeEnabled(enabled);
+            }
+
+            if (recipes.has("reprocessor")) {
+                var enabled = GsonHelper.getAsBoolean(recipes, "reprocessor");
+                config.setSeedReprocessorRecipeEnabled(enabled);
+            }
+        }
     }
 }
