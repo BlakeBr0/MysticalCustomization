@@ -4,7 +4,6 @@ import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
 import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
-import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
@@ -141,6 +140,7 @@ public final class CropCreator {
             });
         }
 
+        // special case crops
         if (isGarbageSeed(crop.getName())) {
             RegistryObject<Item> essence;
 
@@ -151,10 +151,6 @@ public final class CropCreator {
             }
 
             crop.setEssenceItem(essence);
-
-            if (!essence.isPresent()) {
-                MysticalCustomization.LOGGER.error("Could not find the essence for crop {}", crop.getId());
-            }
         }
 
         if (json.has("essence")) {
