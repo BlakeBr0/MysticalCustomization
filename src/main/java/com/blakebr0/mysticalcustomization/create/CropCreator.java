@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -142,15 +143,19 @@ public final class CropCreator {
 
         // special case crops
         if (isGarbageSeed(crop.getName())) {
-            RegistryObject<Item> essence;
+            RegistryObject<Item> essence = null;
 
             if ("insanium".equals(crop.getName())) {
-                essence = RegistryObject.create(new ResourceLocation("mysticalagradditions", crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+                if (ModList.get().isLoaded("mysticalagradditions")) {
+                    essence = RegistryObject.create(new ResourceLocation("mysticalagradditions", crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
+                }
             } else {
                 essence = RegistryObject.create(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")), ForgeRegistries.ITEMS);
             }
 
-            crop.setEssenceItem(essence);
+            if (essence != null) {
+                crop.setEssenceItem(essence);
+            }
         }
 
         if (json.has("essence")) {
