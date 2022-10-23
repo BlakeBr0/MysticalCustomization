@@ -13,6 +13,11 @@ public final class ParsingUtils {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     public static int parseHex(String s, String name) {
+        // remove leading # if it exists
+        if (s.startsWith("#")) {
+            s = s.substring(1);
+        }
+
         try {
             return Integer.parseInt(s, 16);
         } catch (NumberFormatException e) {
