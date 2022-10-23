@@ -3,6 +3,8 @@ package com.blakebr0.mysticalcustomization.create;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
 import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
+import com.blakebr0.mysticalagriculture.api.crop.CropTier;
+import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.util.ParsingUtils;
@@ -18,17 +20,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 public final class CropCreator {
     public static Crop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
-        var tierId = GsonHelper.getAsString(json, "tier");
-        var typeId = GsonHelper.getAsString(json, "type");
-
-        var tier = MysticalAgricultureAPI.getCropRegistry().getTierById(new ResourceLocation(tierId));
-        if (tier == null)
-            throw new JsonSyntaxException("Invalid crop tier provided: " + tierId);
-
-        var type = MysticalAgricultureAPI.getCropRegistry().getTypeById(new ResourceLocation(typeId));
-        if (type == null)
-            throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
-
         var ingredient = json.has("ingredient") ? GsonHelper.getAsJsonObject(json, "ingredient") : null;
         var material = LazyIngredient.EMPTY;
 
@@ -49,7 +40,14 @@ public final class CropCreator {
             }
         }
 
-        var crop = new Crop(id, tier, type, material);
+        // crop tiers and types are assigned lazily in CropLoader
+        var crop = new Crop(id, CropTier.ONE, CropType.RESOURCE, material);
+
+        var tierId = GsonHelper.getAsString(json, "tier");
+        var typeId = GsonHelper.getAsString(json, "type");
+
+        CropLoader.CROP_TIER_MAP.put(crop, new ResourceLocation(tierId));
+        CropLoader.CROP_TYPE_MAP.put(crop, new ResourceLocation(typeId));
 
         if (json.has("color")) {
             var color = GsonHelper.getAsString(json, "color");

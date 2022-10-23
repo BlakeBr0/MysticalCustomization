@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -30,6 +31,8 @@ import java.util.Map;
 public final class CropLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Map<Crop, ResourceLocation> CRUX_MAP = new HashMap<>();
+    public static final Map<Crop, ResourceLocation> CROP_TIER_MAP = new HashMap<>();
+    public static final Map<Crop, ResourceLocation> CROP_TYPE_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/crops/").toFile();
@@ -69,6 +72,30 @@ public final class CropLoader {
     }
 
     public static void onPostRegisterCrops(ICropRegistry registry) {
+        CROP_TIER_MAP.forEach((crop, id) -> {
+            try {
+                var tier = registry.getTierById(id);
+                if (tier == null)
+                    throw new JsonSyntaxException("Invalid crop tier provided: " + id);
+
+                crop.setTier(tier);
+            } catch (Exception e) {
+                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", crop.getId(), e);
+            }
+        });
+
+        CROP_TYPE_MAP.forEach((crop, id) -> {
+            try {
+                var type = registry.getTypeById(id);
+                if (type == null)
+                    throw new JsonSyntaxException("Invalid crop type provided: " + id);
+
+                crop.setType(type);
+            } catch (Exception e) {
+                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", crop.getId(), e);
+            }
+        });
+
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
         if (!dir.exists() && dir.mkdirs()) {
             MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/ directory");
