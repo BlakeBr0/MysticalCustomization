@@ -1,0 +1,15 @@
+{
+  "name": "prosperity",
+  "type": "mysticalagriculture:resource",
+  "tier": "mysticalagriculture:1",
+  "ingredient": {
+    "item": "minecraft:apple"
+  },
+  "color": "FFFFFF",
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_dust",
+    "essence": "mysticalagriculture:item/essence_dust",
+    "seeds": "mysticalagriculture:item/mystical_seeds"
+  },
+  "essence": "mysticalagriculture:supremium_ingot"
+}

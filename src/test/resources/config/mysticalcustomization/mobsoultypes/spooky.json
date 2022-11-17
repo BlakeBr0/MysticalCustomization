@@ -1,0 +1,9 @@
+{
+  "name": "Spooky",
+  "souls": 50,
+  "entities": [
+    "minecraft:spider",
+    "minecraft:cave_spider"
+  ],
+  "color": "abcabc"
+}

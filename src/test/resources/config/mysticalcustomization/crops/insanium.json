@@ -1,0 +1,12 @@
+{
+  "name": "§bTest",
+  "enabled": true,
+  "type": "mysticalagriculture:resource",
+  "tier": "mysticalagradditions:6",
+  "color": "#eb7a34",
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_dust",
+    "essence": "mysticalagriculture:item/essence_dust"
+  },
+  "crux": "minecraft:cobblestone"
+}

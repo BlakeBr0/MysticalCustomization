@@ -1,0 +1,11 @@
+{
+  "name": "Pink",
+  "enabled": true,
+  "type": "mysticalagriculture:resource",
+  "tier": "mysticalagriculture:1",
+  "color": "FF69B4",
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_dust",
+    "essence": "mysticalagriculture:item/essence_dust"
+  }
+}

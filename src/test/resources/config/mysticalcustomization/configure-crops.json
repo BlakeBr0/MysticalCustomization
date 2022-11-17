@@ -1,0 +1,33 @@
+{
+  "mysticalagriculture:iron": {
+    "biomes": [
+      "minecraft:plains",
+      "minecraft:desert"
+    ]
+  },
+  "mysticalagriculture:dirt": {
+    "crux": "minecraft:cobblestone",
+    "essence": "minecraft:dirt"
+  },
+  "mysticalagriculture:spider": {
+    "tier": "mysticalagriculture:5",
+    "ingredient": {
+      "item":"mysticalagriculture:soul_jar",
+      "nbt": {
+        "Type": "mysticalagriculture:skeleton",
+        "Souls": 5.0
+      }
+    }
+  },
+
+  "mysticalagriculture:diamond": {
+    "ingredient": {
+      "type": "forge:nbt",
+      "item": "minecraft:apple",
+      "nbt": {
+        "Id": "extendedcrafting:diamond"
+      }
+    }
+  }
+
+}

@@ -1,0 +1,22 @@
+{
+  "mysticalagriculture:zombie": {
+    "enabled": false
+  },
+  "mysticalagriculture:spider": {
+    "entities": {
+      "remove": [
+        "minecraft:spider"
+      ],
+      "add": [
+        "minecraft:squid"
+      ]
+    }
+  },
+  "mysticalagriculture:squid": {
+    "entities": {
+      "remove": [
+        "minecraft:squid"
+      ]
+    }
+  }
+}
