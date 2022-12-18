@@ -9,6 +9,7 @@ The official release builds can be downloaded from the following websites.
 
 - [Blake's Mods](https://blakesmods.com/mystical-customization/download)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/mystical-customization)
+- [Modrinth](https://modrinth.com/mod/mystical-customization)
 
 ## Development
 
