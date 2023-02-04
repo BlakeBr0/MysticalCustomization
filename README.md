@@ -1,20 +1,21 @@
-# Mystical Customization [![](http://cf.way2muchnoise.eu/full_280441_downloads.svg)](https://minecraft.curseforge.com/projects/mystical-customization)
-Allows modpack creators to add new content and modify existing content in Mystical Agriculture.
+# Mystical Customization
 
 <p align="left">
-    <a href="https://blakesmods.com/mystical-customization" alt="Downloads">
+    <a href="https://blakesmods.com/mystical-customization" alt="Downloads" target="_blank">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/downloads&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/mystical-customization" alt="Latest Version">
+    <a href="https://blakesmods.com/mystical-customization" alt="Latest Version" target="_blank">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/version&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/mystical-customization" alt="Minecraft Version">
+    <a href="https://blakesmods.com/mystical-customization" alt="Minecraft Version" target="_blank">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/mc_version&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/docs/mysticalcustomization" alt="Docs">
+    <a href="https://blakesmods.com/docs/mysticalcustomization" alt="Docs" target="_blank">
         <img src="https://img.shields.io/static/v1?label=docs&message=view&color=brightgreen&style=for-the-badge" />
     </a>
 </p>
+
+Allows modpack creators to add new content and modify existing content in Mystical Agriculture.
 
 ## Download
 
