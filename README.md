@@ -1,16 +1,16 @@
 # Mystical Customization
 
 <p align="left">
-    <a href="https://blakesmods.com/mystical-customization" alt="Downloads" target="_blank">
+    <a href="https://blakesmods.com/mystical-customization" alt="Downloads">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/downloads&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/mystical-customization" alt="Latest Version" target="_blank">
+    <a href="https://blakesmods.com/mystical-customization" alt="Latest Version">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/version&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/mystical-customization" alt="Minecraft Version" target="_blank">
+    <a href="https://blakesmods.com/mystical-customization" alt="Minecraft Version">
         <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/mysticalcustomization/mc_version&style=for-the-badge" />
     </a>
-    <a href="https://blakesmods.com/docs/mysticalcustomization" alt="Docs" target="_blank">
+    <a href="https://blakesmods.com/docs/mysticalcustomization" alt="Docs">
         <img src="https://img.shields.io/static/v1?label=docs&message=view&color=brightgreen&style=for-the-badge" />
     </a>
 </p>
