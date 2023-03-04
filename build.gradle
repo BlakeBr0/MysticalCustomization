@@ -111,12 +111,26 @@ minecraft {
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
 
-    implementation findProject(':Cucumber') ?: fg.deobf("com.blakebr0.cucumber:Cucumber:${cucumber_version}")
-    implementation findProject(':MysticalAgriculture') ?: fg.deobf("com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}")
-    implementation findProject(':MysticalAgradditions') ?: fg.deobf("com.blakebr0.mysticalagradditions:MysticalAgradditions:${mysticalagradditions_version}")
+    if (findProject(':Cucumber')) {
+        implementation project(':Cucumber')
+    } else {
+        implementation fg.deobf("com.blakebr0.cucumber:Cucumber:${cucumber_version}")
+    }
+
+    if (findProject(':MysticalAgriculture')) {
+        implementation project(':MysticalAgriculture')
+    } else {
+        implementation fg.deobf("com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}")
+    }
+
+    if (findProject(':MysticalAgradditions')) {
+        implementation project(':MysticalAgradditions')
+    } else {
+        implementation fg.deobf("com.blakebr0.mysticalagradditions:MysticalAgradditions:${mysticalagradditions_version}")
+    }
 
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}-forge:${jei_version}")
 }
 
 jar {
