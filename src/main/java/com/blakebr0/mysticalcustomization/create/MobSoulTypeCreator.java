@@ -1,8 +1,8 @@
 package com.blakebr0.mysticalcustomization.create;
 
+import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.soul.MobSoulType;
 import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
-import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
@@ -39,7 +39,7 @@ public final class MobSoulTypeCreator {
 
         if (json.has("color")) {
             var color = GsonHelper.getAsString(json, "color");
-            var i = ParsingUtils.parseHex(color, "color");
+            var i = ParsingHelper.parseHex(color, "color");
 
             type.setColor(i);
         }

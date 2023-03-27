@@ -1,8 +1,8 @@
 package com.blakebr0.mysticalcustomization.create;
 
+import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
-import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.ChatFormatting;
@@ -14,7 +14,7 @@ public final class CropTierCreator {
     public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException {
         var value = GsonHelper.getAsInt(json, "value");
         var colorString = GsonHelper.getAsString(json, "color", "ffffff");
-        var color = ParsingUtils.parseHex(colorString, "color");
+        var color = ParsingHelper.parseHex(colorString, "color");
 
         var tier = new CropTier(id, value, color, ChatFormatting.WHITE);
 

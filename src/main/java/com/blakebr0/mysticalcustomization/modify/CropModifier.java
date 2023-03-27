@@ -1,10 +1,10 @@
 package com.blakebr0.mysticalcustomization.modify;
 
+import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
-import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.Component;
@@ -48,7 +48,7 @@ public final class CropModifier {
             } else if (ingredient.has("item")) {
                 var item = GsonHelper.getAsString(ingredient, "item");
                 if (ingredient.has("nbt")) {
-                    var nbt = ParsingUtils.parseNBT(ingredient.get("nbt"));
+                    var nbt = ParsingHelper.parseNBT(ingredient.get("nbt"));
                     material = LazyIngredient.item(item, nbt);
                 } else {
                     material = LazyIngredient.item(item);

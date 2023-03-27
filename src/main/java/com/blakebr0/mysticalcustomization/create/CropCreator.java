@@ -1,5 +1,6 @@
 package com.blakebr0.mysticalcustomization.create;
 
+import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
 import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
@@ -7,7 +8,6 @@ import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
-import com.blakebr0.mysticalcustomization.util.ParsingUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.network.chat.Component;
@@ -30,7 +30,7 @@ public final class CropCreator {
             } else if (ingredient.has("item")) {
                 var item = GsonHelper.getAsString(ingredient, "item");
                 if (ingredient.has("nbt")) {
-                    var nbt = ParsingUtils.parseNBT(ingredient.get("nbt"));
+                    var nbt = ParsingHelper.parseNBT(ingredient.get("nbt"));
                     material = LazyIngredient.item(item, nbt);
                 } else {
                     material = LazyIngredient.item(item);
@@ -51,27 +51,27 @@ public final class CropCreator {
 
         if (json.has("color")) {
             var color = GsonHelper.getAsString(json, "color");
-            var i = ParsingUtils.parseHex(color, "color");
+            var i = ParsingHelper.parseHex(color, "color");
             crop.setColor(i);
         } else if (json.has("colors")) {
             var colors = GsonHelper.getAsJsonObject(json, "colors");
             if (colors.has("flower")) {
                 var color = GsonHelper.getAsString(colors, "flower");
-                var i = ParsingUtils.parseHex(color, "flower");
+                var i = ParsingHelper.parseHex(color, "flower");
 
                 crop.setFlowerColor(i);
             }
 
             if (colors.has("essence")) {
                 var color = GsonHelper.getAsString(colors, "essence");
-                var i = ParsingUtils.parseHex(color, "essence");
+                var i = ParsingHelper.parseHex(color, "essence");
 
                 crop.setEssenceColor(i);
             }
 
             if (colors.has("seeds")) {
                 var color = GsonHelper.getAsString(colors, "seeds");
-                var i = ParsingUtils.parseHex(color, "seeds");
+                var i = ParsingHelper.parseHex(color, "seeds");
 
                 crop.setSeedColor(i);
             }
