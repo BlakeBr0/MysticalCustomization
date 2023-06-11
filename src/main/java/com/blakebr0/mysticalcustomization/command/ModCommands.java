@@ -27,7 +27,7 @@ public final class ModCommands {
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(Component.literal(tiers), false);
+            context.getSource().sendSuccess(() -> Component.literal(tiers), false);
 
             return 0;
         })));
@@ -38,7 +38,7 @@ public final class ModCommands {
                     .map(ResourceLocation::toString)
                     .collect(Collectors.joining("\n"));
 
-            context.getSource().sendSuccess(Component.literal(types), false);
+            context.getSource().sendSuccess(() -> Component.literal(types), false);
 
             return 0;
         })));
