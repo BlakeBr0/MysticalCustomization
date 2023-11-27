@@ -25,3 +25,4 @@ Please add your logs and scripts (if applicable).
  - Cucumber:
  - Mystical Agriculture:
  - Mystical Customization:
+ - Singleplayer or Multiplayer:
