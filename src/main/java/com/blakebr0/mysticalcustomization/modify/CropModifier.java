@@ -65,6 +65,11 @@ public final class CropModifier {
             crop.setBaseSecondaryChance(chance);
         }
 
+        if (json.has("respectsEffectiveFarmland")) {
+            var respects = GsonHelper.getAsBoolean(json, "respectsEffectiveFarmland");
+            crop.setRespectsEffectiveFarmland(respects);
+        }
+
         if (json.has("enabled")) {
             var enabled = GsonHelper.getAsBoolean(json, "enabled");
             crop.setEnabled(enabled);
