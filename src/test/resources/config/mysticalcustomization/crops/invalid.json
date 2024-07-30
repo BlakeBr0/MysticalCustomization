@@ -1,0 +1,19 @@
+{
+  "name": "Invalid",
+  "type": "mysticalagriculture:resource",
+  "tier": "",
+  "ingredient": {
+    "item": "mysticalagriculture:prosperity_shard"
+  },
+  "colors": {
+    "flower": "eeeeee",
+    "essences": "eeeeee",
+    "seeds": "eeeeee"
+  },
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_dust",
+    "essence": "mysticalagriculture:item/essence_flame",
+    "seeds": "mysticalagriculture:item/mystical_seeds"
+  },
+  "enabled":true
+}

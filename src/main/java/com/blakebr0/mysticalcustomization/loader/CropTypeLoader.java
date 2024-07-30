@@ -5,10 +5,10 @@ import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropTypeCreator;
 import com.blakebr0.mysticalcustomization.modify.CropTypeModifier;
+import com.blakebr0.mysticalcustomization.util.ErrorManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +30,8 @@ import java.util.Map;
 
 public final class CropTypeLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final String CATEGORY = "Crop Type";
+
     public static final Map<CropType, ResourceLocation> CRAFTING_SEED_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
@@ -43,23 +45,25 @@ public final class CropTypeLoader {
             return;
 
         for (var file : files) {
-            JsonObject json;
             InputStreamReader reader = null;
             ResourceLocation id = null;
             CropType type = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
 
-                type = CropTypeCreator.create(name, json);
+                try {
+                    type = CropTypeCreator.create(name, json);
+                } catch (JsonSyntaxException e) {
+                    ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while creating crop type with id {}", id, e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating crop type with id %s.".formatted(id), e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -77,30 +81,31 @@ public final class CropTypeLoader {
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-types.json").toFile();
         if (file.exists() && file.isFile()) {
-            JsonObject json;
             FileReader reader = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new FileReader(file);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                json.entrySet().forEach(entry -> {
-                    var name = entry.getKey();
+                for (var entry : json.entrySet()) {
+                    var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var type = registry.getTypeById(new ResourceLocation(name));
+                    var type = registry.getTypeById(ResourceLocation.tryParse(id));
 
-                    if (type == null) {
-                        var error = String.format("Invalid crop type id provided: %s", name);
-                        throw new JsonParseException(error);
+                    try {
+                        if (type == null) {
+                            throw new JsonSyntaxException("Unknown crop type id: %s".formatted(id));
+                        }
+
+                        CropTypeModifier.modify(type, changes);
+                    } catch (JsonSyntaxException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
-
-                    CropTypeModifier.modify(type, changes);
-                });
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while reading configure-types.json", e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while reading configure-types.json.", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -117,10 +122,11 @@ public final class CropTypeLoader {
     public static void onCommonSetup() {
         CRAFTING_SEED_MAP.forEach((type, item) -> {
             var craftingSeed = ForgeRegistries.ITEMS.getValue(item);
+
             if (craftingSeed != Items.AIR) {
                 type.setCraftingSeed(() -> craftingSeed);
             } else {
-                throw new JsonSyntaxException("Invalid crafting seed item provided");
+                ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(type, "Invalid crafting seed item: %s".formatted(item)));
             }
         });
     }

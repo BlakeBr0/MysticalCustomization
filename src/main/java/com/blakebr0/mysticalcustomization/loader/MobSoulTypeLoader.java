@@ -5,11 +5,12 @@ import com.blakebr0.mysticalagriculture.api.soul.MobSoulType;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.MobSoulTypeCreator;
 import com.blakebr0.mysticalcustomization.modify.MobSoulTypeModifier;
+import com.blakebr0.mysticalcustomization.util.ErrorManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
@@ -28,6 +29,8 @@ import java.util.Map;
 
 public final class MobSoulTypeLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final String CATEGORY = "Mob Soul Type";
+
     public static final Map<MobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
 
     public static void onRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
@@ -41,23 +44,25 @@ public final class MobSoulTypeLoader {
             return;
 
         for (var file : files) {
-            JsonObject json;
             InputStreamReader reader = null;
             ResourceLocation id = null;
             MobSoulType type = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
 
-                type = MobSoulTypeCreator.create(id, json);
+                try {
+                    type = MobSoulTypeCreator.create(id, json);
+                } catch (JsonSyntaxException e) {
+                    ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while creating mob soul type with id {}", id, e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating mob soul type with id %s.".formatted(id), e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -75,30 +80,31 @@ public final class MobSoulTypeLoader {
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-mobsoultypes.json").toFile();
         if (file.exists() && file.isFile()) {
-            JsonObject json;
             FileReader reader = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new FileReader(file);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                json.entrySet().forEach(entry -> {
+                for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var type = registry.getMobSoulTypeById(new ResourceLocation(id));
+                    var type = registry.getMobSoulTypeById(ResourceLocation.tryParse(id));
 
-                    if (type == null) {
-                        var error = String.format("Invalid mob soul type id provided: %s", id);
-                        throw new JsonParseException(error);
+                    try {
+                        if (type == null) {
+                            throw new JsonSyntaxException("Unknown mob soul type id: %s".formatted(id));
+                        }
+
+                        MobSoulTypeModifier.modify(type, changes);
+                    } catch (JsonSyntaxException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
-
-                    MobSoulTypeModifier.modify(type, changes);
-                });
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while reading configure-mobsoultypes.json", e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while reading configure-mobsoultypes.json.", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -112,13 +118,13 @@ public final class MobSoulTypeLoader {
         }
 
         ENTITY_ADDITIONS_MAP.forEach((type, entities) -> {
-            entities.forEach(entity -> {
+            for (var entity : entities) {
                 var success = registry.addEntityTo(type, entity);
 
                 if (!success) {
-                    MysticalCustomization.LOGGER.error("Could not add entity {} to mob soul type {}, maybe it's already in use?", entity, type.getId());
+                    ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: Could not add entity %s, maybe it's already in use?".formatted(type.getId(), entity));
                 }
-            });
+            }
         });
     }
 }

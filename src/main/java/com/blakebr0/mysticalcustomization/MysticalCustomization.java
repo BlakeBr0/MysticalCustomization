@@ -4,6 +4,7 @@ import com.blakebr0.mysticalcustomization.command.ModCommands;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
 import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
+import com.blakebr0.mysticalcustomization.util.ErrorManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +29,7 @@ public final class MysticalCustomization {
     public void onCommonSetup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ModCommands());
+        MinecraftForge.EVENT_BUS.register(ErrorManager.INSTANCE);
 
         event.enqueueWork(() -> {
             CropTierLoader.onCommonSetup();

@@ -19,7 +19,7 @@
       }
     }
   },
-
+  "invalid_id:gang": {},
   "mysticalagriculture:diamond": {
     "ingredient": {
       "type": "forge:nbt",
@@ -28,6 +28,8 @@
         "Id": "extendedcrafting:diamond"
       }
     }
+  },
+  "mysticalagriculture:blaze": {
+    "tier": null
   }
-
 }

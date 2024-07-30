@@ -5,10 +5,10 @@ import com.blakebr0.mysticalagriculture.api.registry.ICropRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.create.CropCreator;
 import com.blakebr0.mysticalcustomization.modify.CropModifier;
+import com.blakebr0.mysticalcustomization.util.ErrorManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +30,8 @@ import java.util.Map;
 
 public final class CropLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final String CATEGORY = "Crops";
+
     public static final Map<Crop, ResourceLocation> CRUX_MAP = new HashMap<>();
     public static final Map<Crop, ResourceLocation> CROP_TIER_MAP = new HashMap<>();
     public static final Map<Crop, ResourceLocation> CROP_TYPE_MAP = new HashMap<>();
@@ -45,23 +47,25 @@ public final class CropLoader {
             return;
 
         for (var file : files) {
-            JsonObject json;
             InputStreamReader reader = null;
             ResourceLocation id = null;
             Crop crop = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
                 id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
 
-                crop = CropCreator.create(id, json);
+                try {
+                    crop = CropCreator.create(id, json);
+                } catch (JsonSyntaxException e) {
+                    ErrorManager.INSTANCE.addError(CATEGORY, e.getMessage());
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", id, e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating crop with id %s.".formatted(id), e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -73,26 +77,20 @@ public final class CropLoader {
 
     public static void onPostRegisterCrops(ICropRegistry registry) {
         CROP_TIER_MAP.forEach((crop, id) -> {
-            try {
-                var tier = registry.getTierById(id);
-                if (tier == null)
-                    throw new JsonSyntaxException("Invalid crop tier provided: " + id);
-
+            var tier = registry.getTierById(id);
+            if (tier == null) {
+                ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(crop.getId(), "Invalid crop tier: %s".formatted(id)));
+            } else {
                 crop.setTier(tier);
-            } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", crop.getId(), e);
             }
         });
 
         CROP_TYPE_MAP.forEach((crop, id) -> {
-            try {
-                var type = registry.getTypeById(id);
-                if (type == null)
-                    throw new JsonSyntaxException("Invalid crop type provided: " + id);
-
+            var type = registry.getTypeById(id);
+            if (type == null) {
+                ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(crop.getId(), "Invalid crop type: %s".formatted(id)));
+            } else {
                 crop.setType(type);
-            } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while creating crop with id {}", crop.getId(), e);
             }
         });
 
@@ -103,30 +101,31 @@ public final class CropLoader {
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-crops.json").toFile();
         if (file.exists() && file.isFile()) {
-            JsonObject json;
             FileReader reader = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new FileReader(file);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                json.entrySet().forEach(entry -> {
+                for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var crop = registry.getCropById(new ResourceLocation(id));
+                    var crop = registry.getCropById(ResourceLocation.tryParse(id));
 
-                    if (crop == null) {
-                        var error = String.format("Invalid crop id provided: %s", id);
-                        throw new JsonParseException(error);
+                    try {
+                        if (crop == null) {
+                            throw new JsonSyntaxException("Unknown crop id: %s".formatted(id));
+                        }
+
+                        CropModifier.modify(crop, changes);
+                    } catch (JsonSyntaxException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
-
-                    CropModifier.modify(crop, changes);
-                });
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while reading configure-crops.json", e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while reading configure-crops.json.", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -149,7 +148,7 @@ public final class CropLoader {
                 if (block != Blocks.AIR) {
                     crop.setCruxBlock(() -> block);
                 } else {
-                    MysticalCustomization.LOGGER.error("Could not find crux for crop {}", crop.getId());
+                    ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(crop.getId(), "Invalid crux block: %s".formatted(crux)));
                 }
             }
         });

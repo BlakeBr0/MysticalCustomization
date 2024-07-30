@@ -3,11 +3,12 @@ package com.blakebr0.mysticalcustomization.loader;
 import com.blakebr0.mysticalagriculture.api.registry.IAugmentRegistry;
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.modify.AugmentModifier;
+import com.blakebr0.mysticalcustomization.util.ErrorManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 
 public final class AugmentLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final String CATEGORY = "Augment";
 
     public static void onPostRegisterAugments(IAugmentRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/").toFile();
@@ -29,30 +31,31 @@ public final class AugmentLoader {
 
         var file = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/configure-augments.json").toFile();
         if (file.exists() && file.isFile()) {
-            JsonObject json;
             InputStreamReader reader = null;
 
             try {
-                var parser = new JsonParser();
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                json = parser.parse(reader).getAsJsonObject();
+                var json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                json.entrySet().forEach(entry -> {
+                for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var augment = registry.getAugmentById(new ResourceLocation(id));
+                    var augment = registry.getAugmentById(ResourceLocation.tryParse(id));
 
-                    if (augment == null) {
-                        var error = String.format("Invalid augment id provided: %s", id);
-                        throw new JsonParseException(error);
+                    try {
+                        if (augment == null) {
+                            throw new JsonSyntaxException("Unknown augment id: %s".formatted(id));
+                        }
+
+                        AugmentModifier.modify(augment, changes);
+                    } catch (JsonSyntaxException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
-
-                    AugmentModifier.modify(augment, changes);
-                });
+                }
 
                 reader.close();
             } catch (Exception e) {
-                MysticalCustomization.LOGGER.error("An error occurred while reading configure-augment.json", e);
+                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while reading configure-augments.json.", e);
             } finally {
                 IOUtils.closeQuietly(reader);
             }
