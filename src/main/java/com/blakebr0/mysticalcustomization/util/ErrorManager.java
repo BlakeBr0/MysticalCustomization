@@ -2,8 +2,8 @@ package com.blakebr0.mysticalcustomization.util;
 
 import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;

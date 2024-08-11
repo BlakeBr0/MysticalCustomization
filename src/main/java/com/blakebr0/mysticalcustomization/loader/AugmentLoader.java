@@ -9,8 +9,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
@@ -48,7 +49,7 @@ public final class AugmentLoader {
                         }
 
                         AugmentModifier.modify(augment, changes);
-                    } catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }

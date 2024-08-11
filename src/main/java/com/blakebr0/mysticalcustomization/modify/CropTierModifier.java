@@ -4,12 +4,13 @@ import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 
 public final class CropTierModifier {
-    public static void modify(CropTier tier, JsonObject json) throws JsonSyntaxException {
+    public static void modify(CropTier tier, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
         if (json.has("name")) {
             var name = GsonHelper.getAsString(json, "name");
             tier.setDisplayName(Component.literal(name));
@@ -32,12 +33,12 @@ public final class CropTierModifier {
 
         if (json.has("farmland")) {
             var blockId = GsonHelper.getAsString(json, "farmland");
-            CropTierLoader.FARMLAND_MAP.put(tier, new ResourceLocation(blockId));
+            CropTierLoader.FARMLAND_MAP.put(tier, ResourceLocation.parse(blockId));
         }
 
         if (json.has("essence")) {
             var itemId = GsonHelper.getAsString(json, "essence");
-            CropTierLoader.ESSENCE_MAP.put(tier, new ResourceLocation(itemId));
+            CropTierLoader.ESSENCE_MAP.put(tier, ResourceLocation.parse(itemId));
         }
     }
 }

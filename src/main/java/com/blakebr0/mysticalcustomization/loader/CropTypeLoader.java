@@ -11,10 +11,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
@@ -53,11 +54,11 @@ public final class CropTypeLoader {
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
-                id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+                id = MysticalCustomization.resource(name);
 
                 try {
                     type = CropTypeCreator.create(name, json);
-                } catch (JsonSyntaxException e) {
+                } catch (JsonSyntaxException | ResourceLocationException e) {
                     ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                 }
 
@@ -98,7 +99,7 @@ public final class CropTypeLoader {
                         }
 
                         CropTypeModifier.modify(type, changes);
-                    } catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -121,8 +122,7 @@ public final class CropTypeLoader {
 
     public static void onCommonSetup() {
         CRAFTING_SEED_MAP.forEach((type, item) -> {
-            var craftingSeed = ForgeRegistries.ITEMS.getValue(item);
-
+            var craftingSeed = BuiltInRegistries.ITEM.get(item);
             if (craftingSeed != Items.AIR) {
                 type.setCraftingSeed(() -> craftingSeed);
             } else {

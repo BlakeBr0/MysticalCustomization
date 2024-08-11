@@ -11,10 +11,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
@@ -55,11 +55,11 @@ public final class CropLoader {
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
-                id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+                id = MysticalCustomization.resource(name);
 
                 try {
                     crop = CropCreator.create(id, json);
-                } catch (JsonSyntaxException e) {
+                } catch (JsonSyntaxException | ResourceLocationException e) {
                     ErrorManager.INSTANCE.addError(CATEGORY, e.getMessage());
                 }
 
@@ -118,7 +118,7 @@ public final class CropLoader {
                         }
 
                         CropModifier.modify(crop, changes);
-                    } catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -144,9 +144,9 @@ public final class CropLoader {
             if (crux == null) {
                 crop.setCruxBlock(null);
             } else {
-                var block = ForgeRegistries.BLOCKS.getValue(crux);
-                if (block != Blocks.AIR) {
-                    crop.setCruxBlock(() -> block);
+                var block = BuiltInRegistries.BLOCK.getOptional(crux);
+                if (block.isPresent()) {
+                    crop.setCruxBlock(block::get);
                 } else {
                     ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(crop.getId(), "Invalid crux block: %s".formatted(crux)));
                 }

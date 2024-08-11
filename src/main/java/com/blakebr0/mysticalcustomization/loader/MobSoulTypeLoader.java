@@ -11,8 +11,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
@@ -52,11 +53,11 @@ public final class MobSoulTypeLoader {
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
-                id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+                id = MysticalCustomization.resource(name);
 
                 try {
                     type = MobSoulTypeCreator.create(id, json);
-                } catch (JsonSyntaxException e) {
+                } catch (JsonSyntaxException | ResourceLocationException e) {
                     ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                 }
 
@@ -97,7 +98,7 @@ public final class MobSoulTypeLoader {
                         }
 
                         MobSoulTypeModifier.modify(type, changes);
-                    } catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }

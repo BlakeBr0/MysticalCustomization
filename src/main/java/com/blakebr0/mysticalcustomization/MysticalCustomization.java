@@ -5,11 +5,12 @@ import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
 import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
 import com.blakebr0.mysticalcustomization.util.ErrorManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,22 +20,23 @@ public final class MysticalCustomization {
     public static final String NAME = "Mystical Customization";
     public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
-    public MysticalCustomization() {
-        var bus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public MysticalCustomization(IEventBus bus) {
         bus.register(this);
     }
 
     @SubscribeEvent
     public void onCommonSetup(FMLCommonSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ModCommands());
-        MinecraftForge.EVENT_BUS.register(ErrorManager.INSTANCE);
+        NeoForge.EVENT_BUS.register(new ModCommands());
+        NeoForge.EVENT_BUS.register(ErrorManager.INSTANCE);
 
         event.enqueueWork(() -> {
             CropTierLoader.onCommonSetup();
             CropTypeLoader.onCommonSetup();
             CropLoader.onCommonSetup();
         });
+    }
+
+    public static ResourceLocation resource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 }

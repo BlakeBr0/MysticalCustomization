@@ -11,11 +11,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.FarmBlock;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
@@ -55,11 +56,11 @@ public final class CropTierLoader {
                 reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 var json = JsonParser.parseReader(reader).getAsJsonObject();
                 var name = file.getName().replace(".json", "");
-                id = new ResourceLocation(MysticalCustomization.MOD_ID, name);
+                id = MysticalCustomization.resource(name);
 
                 try {
                     tier = CropTierCreator.create(id, json);
-                } catch (JsonSyntaxException e) {
+                } catch (JsonSyntaxException | ResourceLocationException e) {
                     ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                 }
 
@@ -100,7 +101,7 @@ public final class CropTierLoader {
                         }
 
                         CropTierModifier.modify(tier, changes);
-                    } catch (JsonSyntaxException e) {
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -123,7 +124,7 @@ public final class CropTierLoader {
 
     public static void onCommonSetup() {
         FARMLAND_MAP.forEach((tier, block) -> {
-            var farmland = ForgeRegistries.BLOCKS.getValue(block);
+            var farmland = BuiltInRegistries.BLOCK.get(block);
             if (farmland instanceof FarmBlock) {
                 tier.setFarmland(() -> farmland);
             } else {
@@ -132,7 +133,7 @@ public final class CropTierLoader {
         });
 
         ESSENCE_MAP.forEach((tier, item) -> {
-            var essence = ForgeRegistries.ITEMS.getValue(item);
+            var essence = BuiltInRegistries.ITEM.get(item);
             if (essence != Items.AIR) {
                 tier.setEssence(() -> essence);
             } else {
