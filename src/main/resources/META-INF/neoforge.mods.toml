@@ -31,12 +31,12 @@ license="MIT"
     [[dependencies.mysticalcustomization]]
         modId="cucumber"
         mandatory=true
-        versionRange="[6.1.0,)"
+        versionRange="[8.0.0,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.mysticalcustomization]]
         modId="mysticalagriculture"
         mandatory=true
-        versionRange="[7.0.11,)"
+        versionRange="[8.0.2,)"
         ordering="NONE"
         side="BOTH"
