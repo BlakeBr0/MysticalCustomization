@@ -3,7 +3,12 @@
   "type": "mysticalagriculture:resource",
   "tier": "mysticalagriculture:1",
   "ingredient": {
-    "item": "minecraft:apple"
+    "item": "minecraft:apple",
+    "components": {
+      "minecraft:unbreakable": {
+        "show_in_tooltip": true
+      }
+    }
   },
   "color": "FFFFFF",
   "textures": {

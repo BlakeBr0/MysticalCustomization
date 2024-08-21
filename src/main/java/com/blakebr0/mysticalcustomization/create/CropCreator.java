@@ -10,7 +10,9 @@ import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -30,9 +32,9 @@ public final class CropCreator {
                 material = LazyIngredient.tag(tag);
             } else if (ingredient.has("item")) {
                 var item = GsonHelper.getAsString(ingredient, "item");
-                if (ingredient.has("nbt")) {
-                    var nbt = ParsingHelper.parseNBT(ingredient.get("nbt"));
-                    material = LazyIngredient.item(item, nbt);
+                if (ingredient.has("components")) {
+                    var components = DataComponentMap.CODEC.decode(JsonOps.INSTANCE, ingredient.get("components")).getOrThrow(JsonSyntaxException::new).getFirst();
+                    material = LazyIngredient.item(item, components);
                 } else {
                     material = LazyIngredient.item(item);
                 }
