@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -144,9 +145,9 @@ public final class CropLoader {
             if (crux == null) {
                 crop.setCruxBlock(null);
             } else {
-                var block = BuiltInRegistries.BLOCK.getOptional(crux);
-                if (block.isPresent()) {
-                    crop.setCruxBlock(block::get);
+                var block = BuiltInRegistries.BLOCK.get(crux);
+                if (block != Blocks.AIR) {
+                    crop.setCruxBlock(() -> block);
                 } else {
                     ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(crop.getId(), "Invalid crux block: %s".formatted(crux)));
                 }
