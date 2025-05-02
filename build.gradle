@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.14'
+    id 'net.neoforged.moddev' version '2.0.83'
 }
 
 version = '1.21.1-6.0.0'
@@ -17,11 +17,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
-boolean hasCucumber = findProject(':Cucumber') != null
-boolean hasMysticalAgriculture = findProject(':MysticalAgriculture') != null
-boolean hasMysticalAgradditions = findProject(':MysticalAgradditions') != null
-
 repositories {
+    mavenLocal()
     maven { url 'https://maven.blakesmods.com' }
     maven { url 'https://maven.blamejared.com' }
     maven {
@@ -62,34 +59,13 @@ neoForge {
         configureEach {
             systemProperty 'forge.logging.markers', 'REGISTRIES'
             logLevel = org.slf4j.event.Level.DEBUG
+            ideName = "MysticalCustomization - ${it.ideName.get()}"
         }
     }
 
     mods {
         mysticalcustomization {
             sourceSet(sourceSets.main)
-        }
-
-        if (hasCucumber) {
-            cucumber {
-                sourceSet(project(':Cucumber').sourceSets.main)
-            }
-        }
-
-        if (hasMysticalAgriculture) {
-            evaluationDependsOn(':MysticalAgriculture')
-
-            mysticalagriculture {
-                sourceSet(project(':MysticalAgriculture').sourceSets.main)
-            }
-        }
-
-        if (hasMysticalAgradditions) {
-            evaluationDependsOn(':MysticalAgradditions')
-
-            mysticalagradditions {
-                sourceSet(project(':MysticalAgradditions').sourceSets.main)
-            }
         }
     }
 }
@@ -99,29 +75,9 @@ configurations {
 }
 
 dependencies {
-    if (hasCucumber) {
-        implementation(project(':Cucumber')) {
-            transitive = false
-        }
-    } else {
-        implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
-    }
-
-    if (hasMysticalAgriculture) {
-        implementation(project(':MysticalAgriculture')) {
-            transitive = false
-        }
-    } else {
-        implementation "com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}"
-    }
-
-    if (hasMysticalAgradditions) {
-        implementation(project(':MysticalAgradditions')) {
-            transitive = false
-        }
-    } else {
-        implementation "com.blakebr0.mysticalagradditions:MysticalAgradditions:${mysticalagradditions_version}"
-    }
+    implementation "com.blakebr0.cucumber:Cucumber:${cucumber_version}"
+    implementation "com.blakebr0.mysticalagriculture:MysticalAgriculture:${mysticalagriculture_version}"
+    implementation "com.blakebr0.mysticalagradditions:MysticalAgradditions:${mysticalagradditions_version}"
 
     runtimeOnly "curse.maven:jade-324717:${jade_version}"
     runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
