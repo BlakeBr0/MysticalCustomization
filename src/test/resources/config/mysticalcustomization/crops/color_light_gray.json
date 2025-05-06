@@ -1,0 +1,10 @@
+{
+  "name": "Light Gray",
+  "type": "mysticalagriculture:resource",
+  "tier": "mysticalagriculture:1",
+  "color": "#a0a7a7",
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_ingot",
+    "essence": "mysticalagriculture:item/essence_dust"
+  }
+}
