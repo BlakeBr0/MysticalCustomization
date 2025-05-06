@@ -29,6 +29,11 @@ repositories {
     }
 }
 
+tasks.register('syncTestConfigs', Sync) {
+    from 'src/test/resources/config'
+    into 'run/config'
+}
+
 neoForge {
     version = neo_version
 
@@ -61,6 +66,7 @@ neoForge {
             systemProperty 'terminal.jline', 'true'
             logLevel = org.slf4j.event.Level.DEBUG
             ideName = "MysticalCustomization - ${it.ideName.get()}"
+            taskBefore tasks.named('syncTestConfigs')
         }
     }
 
@@ -130,12 +136,3 @@ idea {
         downloadJavadoc = true
     }
 }
-
-tasks.register('addTestConfigs') {
-    project.copy {
-        from 'src/test/resources/config'
-        into file('run/config')
-    }
-}
-
-tasks.processResources.finalizedBy('addTestConfigs')
