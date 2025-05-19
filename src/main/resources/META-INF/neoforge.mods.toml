@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="MIT"
 
 [[mods]]
-    issueTrackerURL="https://github.com/BlakeBr0/MysticalAgriculture/issues"
+    issueTrackerURL="https://github.com/BlakeBr0/MysticalCustomization/issues"
     modId="mysticalcustomization"
     version="${mod_version}"
     displayName="Mystical Customization"
