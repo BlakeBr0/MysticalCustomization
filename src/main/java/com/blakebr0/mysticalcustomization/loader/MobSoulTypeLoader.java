@@ -15,15 +15,15 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,36 +40,42 @@ public final class MobSoulTypeLoader {
             MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/mobsoultypes/ directory");
         }
 
-        var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
-        if (files == null)
-            return;
+        try (var paths = Files.walk(dir.toPath())) {
+            var files = paths
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.toString().toLowerCase().endsWith(".json"))
+                    .map(Path::toFile)
+                    .toList();
 
-        for (var file : files) {
-            InputStreamReader reader = null;
-            ResourceLocation id = null;
-            MobSoulType type = null;
-
-            try {
-                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                var json = JsonParser.parseReader(reader).getAsJsonObject();
-                var name = file.getName().replace(".json", "");
-                id = MysticalCustomization.resource(name);
+            for (var file : files) {
+                InputStreamReader reader = null;
+                ResourceLocation id = null;
+                MobSoulType type = null;
 
                 try {
-                    type = MobSoulTypeCreator.create(id, json);
-                } catch (JsonSyntaxException | ResourceLocationException e) {
-                    ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
+                    reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+                    var json = JsonParser.parseReader(reader).getAsJsonObject();
+                    var name = file.getName().replace(".json", "");
+                    id = MysticalCustomization.resource(name);
+
+                    try {
+                        type = MobSoulTypeCreator.create(id, json);
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
+                    }
+
+                    reader.close();
+                } catch (Exception e) {
+                    ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating mob soul type with id %s.".formatted(id), e);
+                } finally {
+                    IOUtils.closeQuietly(reader);
                 }
 
-                reader.close();
-            } catch (Exception e) {
-                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating mob soul type with id %s.".formatted(id), e);
-            } finally {
-                IOUtils.closeQuietly(reader);
+                if (type != null)
+                    registry.register(type);
             }
-
-            if (type != null)
-                registry.register(type);
+        } catch (Exception e) {
+            ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while processing mob soul type files.", e);
         }
     }
 

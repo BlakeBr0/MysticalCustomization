@@ -1,0 +1,11 @@
+{
+  "name": "§cChick",
+  "enabled": true,
+  "type": "mysticalagriculture:resource",
+  "tier": "mysticalagriculture:3",
+  "color": "#FFCF2F",
+  "textures": {
+    "flower": "mysticalagriculture:block/flower_dust",
+    "essence": "mysticalagriculture:item/essence_dust"
+  }
+}

@@ -17,15 +17,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,36 +43,42 @@ public final class CropLoader {
             MysticalCustomization.LOGGER.info("Created /config/mysticalcustomization/crops/ directory");
         }
 
-        var files = dir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
-        if (files == null)
-            return;
+        try (var paths = Files.walk(dir.toPath())) {
+            var files = paths
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.toString().toLowerCase().endsWith(".json"))
+                    .map(Path::toFile)
+                    .toList();
 
-        for (var file : files) {
-            InputStreamReader reader = null;
-            ResourceLocation id = null;
-            Crop crop = null;
-
-            try {
-                reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-                var json = JsonParser.parseReader(reader).getAsJsonObject();
-                var name = file.getName().replace(".json", "");
-                id = MysticalCustomization.resource(name);
+            for (var file : files) {
+                InputStreamReader reader = null;
+                ResourceLocation id = null;
+                Crop crop = null;
 
                 try {
-                    crop = CropCreator.create(id, json);
-                } catch (JsonSyntaxException | ResourceLocationException e) {
-                    ErrorManager.INSTANCE.addError(CATEGORY, e.getMessage());
+                    reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+                    var json = JsonParser.parseReader(reader).getAsJsonObject();
+                    var name = file.getName().replace(".json", "");
+                    id = MysticalCustomization.resource(name);
+
+                    try {
+                        crop = CropCreator.create(id, json);
+                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                        ErrorManager.INSTANCE.addError(CATEGORY, e.getMessage());
+                    }
+
+                    reader.close();
+                } catch (Exception e) {
+                    ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating crop with id %s.".formatted(id), e);
+                } finally {
+                    IOUtils.closeQuietly(reader);
                 }
 
-                reader.close();
-            } catch (Exception e) {
-                ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred creating crop with id %s.".formatted(id), e);
-            } finally {
-                IOUtils.closeQuietly(reader);
+                if (crop != null)
+                    registry.register(crop);
             }
-
-            if (crop != null)
-                registry.register(crop);
+        } catch (Exception e) {
+            ErrorManager.INSTANCE.addFatalError(CATEGORY, "An error occurred while processing crop files.", e);
         }
     }
 
