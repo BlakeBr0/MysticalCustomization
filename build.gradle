@@ -72,7 +72,7 @@ dependencies {
     implementation "com.blakebr0.mysticalagradditions:MysticalAgradditions:${mysticalagradditions_version}"
 
     runtimeOnly "curse.maven:jade-324717:${jade_version}"
-    runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 java.withSourcesJar()
