@@ -11,9 +11,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
@@ -33,7 +33,7 @@ public final class CropTypeLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String CATEGORY = "Crop Type";
 
-    public static final Map<CropType, ResourceLocation> CRAFTING_SEED_MAP = new HashMap<>();
+    public static final Map<CropType, Identifier> CRAFTING_SEED_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/types/").toFile();
@@ -50,7 +50,7 @@ public final class CropTypeLoader {
 
             for (var file : files) {
                 InputStreamReader reader = null;
-                ResourceLocation id = null;
+                Identifier id = null;
                 CropType type = null;
 
                 try {
@@ -61,7 +61,7 @@ public final class CropTypeLoader {
 
                     try {
                         type = CropTypeCreator.create(name, json);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                     }
 
@@ -97,7 +97,7 @@ public final class CropTypeLoader {
                 for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var type = registry.getTypeById(ResourceLocation.tryParse(id));
+                    var type = registry.getTypeById(Identifier.tryParse(id));
 
                     try {
                         if (type == null) {
@@ -105,7 +105,7 @@ public final class CropTypeLoader {
                         }
 
                         CropTypeModifier.modify(type, changes);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -128,7 +128,7 @@ public final class CropTypeLoader {
 
     public static void onCommonSetup() {
         CRAFTING_SEED_MAP.forEach((type, item) -> {
-            var craftingSeed = BuiltInRegistries.ITEM.get(item);
+            var craftingSeed = BuiltInRegistries.ITEM.getValue(item);
             if (craftingSeed != Items.AIR) {
                 type.setCraftingSeed(() -> craftingSeed);
             } else {

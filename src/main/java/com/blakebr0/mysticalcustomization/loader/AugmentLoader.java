@@ -9,8 +9,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 
@@ -41,7 +41,7 @@ public final class AugmentLoader {
                 for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var augment = registry.getAugmentById(ResourceLocation.tryParse(id));
+                    var augment = registry.getAugmentById(Identifier.tryParse(id));
 
                     try {
                         if (augment == null) {
@@ -49,7 +49,7 @@ public final class AugmentLoader {
                         }
 
                         AugmentModifier.modify(augment, changes);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }

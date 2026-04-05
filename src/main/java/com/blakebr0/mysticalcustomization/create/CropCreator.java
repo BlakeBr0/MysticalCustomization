@@ -11,18 +11,18 @@ import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public final class CropCreator {
-    public static Crop create(ResourceLocation id, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
+    public static Crop create(Identifier id, JsonObject json) throws JsonSyntaxException, IdentifierException {
         var ingredient = json.has("ingredient") ? GsonHelper.getAsJsonObject(json, "ingredient") : null;
         var material = LazyIngredient.EMPTY;
 
@@ -49,8 +49,8 @@ public final class CropCreator {
         var tierId = GsonHelper.getAsString(json, "tier");
         var typeId = GsonHelper.getAsString(json, "type");
 
-        CropLoader.CROP_TIER_MAP.put(crop, ResourceLocation.parse(tierId));
-        CropLoader.CROP_TYPE_MAP.put(crop, ResourceLocation.parse(typeId));
+        CropLoader.CROP_TIER_MAP.put(crop, Identifier.parse(tierId));
+        CropLoader.CROP_TYPE_MAP.put(crop, Identifier.parse(typeId));
 
         if (json.has("color")) {
             var color = GsonHelper.getAsString(json, "color");
@@ -89,21 +89,21 @@ public final class CropCreator {
             var textures = GsonHelper.getAsJsonObject(json, "textures");
             if (textures.has("flower")) {
                 var texture = GsonHelper.getAsString(textures, "flower");
-                var location = ResourceLocation.parse(texture);
+                var location = Identifier.parse(texture);
 
                 ctextures.setFlowerTexture(location);
             }
 
             if (textures.has("essence")) {
                 var texture = GsonHelper.getAsString(textures, "essence");
-                var location = ResourceLocation.parse(texture);
+                var location = Identifier.parse(texture);
 
                 ctextures.setEssenceTexture(location);
             }
 
             if (textures.has("seeds")) {
                 var texture = GsonHelper.getAsString(textures, "seeds");
-                var location = ResourceLocation.parse(texture);
+                var location = Identifier.parse(texture);
 
                 ctextures.setSeedTexture(location);
             }
@@ -131,7 +131,7 @@ public final class CropCreator {
 
         if (json.has("crux")) {
             var crux = GsonHelper.getAsString(json, "crux");
-            CropLoader.CRUX_MAP.put(crop, ResourceLocation.parse(crux));
+            CropLoader.CRUX_MAP.put(crop, Identifier.parse(crux));
         }
 
         if (json.has("glint")) {
@@ -143,7 +143,7 @@ public final class CropCreator {
             var biomes = GsonHelper.getAsJsonArray(json, "biomes");
 
             biomes.forEach(biome -> {
-                crop.addRequiredBiome(ResourceLocation.parse(biome.getAsString()));
+                crop.addRequiredBiome(Identifier.parse(biome.getAsString()));
             });
         }
 
@@ -153,10 +153,10 @@ public final class CropCreator {
 
             if ("insanium".equals(crop.getName())) {
                 if (ModList.get().isLoaded("mysticalagradditions")) {
-                    essence = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("mysticalagradditions", crop.getNameWithSuffix("essence")));
+                    essence = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath("mysticalagradditions", crop.getNameWithSuffix("essence")));
                 }
             } else {
-                essence = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")));
+                essence = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, crop.getNameWithSuffix("essence")));
             }
 
             if (essence != null) {
@@ -166,7 +166,7 @@ public final class CropCreator {
 
         if (json.has("essence")) {
             var essence = GsonHelper.getAsString(json, "essence");
-            var item =  DeferredHolder.create(Registries.ITEM, ResourceLocation.parse(essence));
+            var item =  DeferredHolder.create(Registries.ITEM, Identifier.parse(essence));
 
             crop.setEssenceItem(item);
         }

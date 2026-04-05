@@ -11,8 +11,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 
@@ -32,7 +32,7 @@ public final class MobSoulTypeLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String CATEGORY = "Mob Soul Type";
 
-    public static final Map<MobSoulType, List<ResourceLocation>> ENTITY_ADDITIONS_MAP = new HashMap<>();
+    public static final Map<MobSoulType, List<Identifier>> ENTITY_ADDITIONS_MAP = new HashMap<>();
 
     public static void onRegisterMobSoulTypes(IMobSoulTypeRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/mobsoultypes/").toFile();
@@ -49,7 +49,7 @@ public final class MobSoulTypeLoader {
 
             for (var file : files) {
                 InputStreamReader reader = null;
-                ResourceLocation id = null;
+                Identifier id = null;
                 MobSoulType type = null;
 
                 try {
@@ -60,7 +60,7 @@ public final class MobSoulTypeLoader {
 
                     try {
                         type = MobSoulTypeCreator.create(id, json);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                     }
 
@@ -96,7 +96,7 @@ public final class MobSoulTypeLoader {
                 for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var type = registry.getMobSoulTypeById(ResourceLocation.tryParse(id));
+                    var type = registry.getMobSoulTypeById(Identifier.tryParse(id));
 
                     try {
                         if (type == null) {
@@ -104,7 +104,7 @@ public final class MobSoulTypeLoader {
                         }
 
                         MobSoulTypeModifier.modify(type, changes);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }

@@ -4,20 +4,20 @@ import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalcustomization.loader.CropTypeLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 public final class CropTypeCreator {
-    public static CropType create(String name, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
+    public static CropType create(String name, JsonObject json) throws JsonSyntaxException, IdentifierException {
         var textures = GsonHelper.getAsJsonObject(json, "textures");
         var stem = GsonHelper.getAsString(textures, "stem");
 
-        var type = new CropType(ResourceLocation.parse(name), ResourceLocation.parse(stem));
+        var type = new CropType(Identifier.parse(name), Identifier.parse(stem));
 
         if (json.has("craftingSeed")) {
             var itemId = GsonHelper.getAsString(json, "craftingSeed");
-            CropTypeLoader.CRAFTING_SEED_MAP.put(type, ResourceLocation.parse(itemId));
+            CropTypeLoader.CRAFTING_SEED_MAP.put(type, Identifier.parse(itemId));
         }
 
         return type;

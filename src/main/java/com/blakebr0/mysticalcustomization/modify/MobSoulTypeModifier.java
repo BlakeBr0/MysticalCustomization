@@ -7,15 +7,15 @@ import com.blakebr0.mysticalcustomization.MysticalCustomization;
 import com.blakebr0.mysticalcustomization.loader.MobSoulTypeLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 import java.util.ArrayList;
 
 public final class MobSoulTypeModifier {
-    public static void modify(MobSoulType type, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
+    public static void modify(MobSoulType type, JsonObject json) throws JsonSyntaxException, IdentifierException {
         if (json.has("souls")) {
             var souls = GsonHelper.getAsFloat(json, "souls");
             type.setSoulRequirement(souls);
@@ -28,7 +28,7 @@ public final class MobSoulTypeModifier {
                 var remove = GsonHelper.getAsJsonArray(entities, "remove");
 
                 remove.forEach(entity -> {
-                    boolean success = MysticalAgricultureAPI.getMobSoulTypeRegistry().removeEntityFrom(type, ResourceLocation.parse(entity.getAsString()));
+                    boolean success = MysticalAgricultureAPI.getMobSoulTypeRegistry().removeEntityFrom(type, Identifier.parse(entity.getAsString()));
 
                     if (!success) {
                         MysticalCustomization.LOGGER.error("Could not remove entity {} from mob soul type {}, maybe it wasn't added?", entity.getAsString(), type.getId());
@@ -40,7 +40,7 @@ public final class MobSoulTypeModifier {
                 var add = GsonHelper.getAsJsonArray(entities, "add");
 
                 add.forEach(entity -> {
-                    MobSoulTypeLoader.ENTITY_ADDITIONS_MAP.computeIfAbsent(type, t -> new ArrayList<>()).add(ResourceLocation.parse(entity.getAsString()));
+                    MobSoulTypeLoader.ENTITY_ADDITIONS_MAP.computeIfAbsent(type, t -> new ArrayList<>()).add(Identifier.parse(entity.getAsString()));
                 });
             }
         }

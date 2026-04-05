@@ -11,9 +11,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
@@ -33,9 +33,9 @@ public final class CropLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String CATEGORY = "Crops";
 
-    public static final Map<Crop, ResourceLocation> CRUX_MAP = new HashMap<>();
-    public static final Map<Crop, ResourceLocation> CROP_TIER_MAP = new HashMap<>();
-    public static final Map<Crop, ResourceLocation> CROP_TYPE_MAP = new HashMap<>();
+    public static final Map<Crop, Identifier> CRUX_MAP = new HashMap<>();
+    public static final Map<Crop, Identifier> CROP_TIER_MAP = new HashMap<>();
+    public static final Map<Crop, Identifier> CROP_TYPE_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/crops/").toFile();
@@ -52,7 +52,7 @@ public final class CropLoader {
 
             for (var file : files) {
                 InputStreamReader reader = null;
-                ResourceLocation id = null;
+                Identifier id = null;
                 Crop crop = null;
 
                 try {
@@ -63,7 +63,7 @@ public final class CropLoader {
 
                     try {
                         crop = CropCreator.create(id, json);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, e.getMessage());
                     }
 
@@ -117,7 +117,7 @@ public final class CropLoader {
                 for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var crop = registry.getCropById(ResourceLocation.tryParse(id));
+                    var crop = registry.getCropById(Identifier.tryParse(id));
 
                     try {
                         if (crop == null) {
@@ -125,7 +125,7 @@ public final class CropLoader {
                         }
 
                         CropModifier.modify(crop, changes);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -151,7 +151,7 @@ public final class CropLoader {
             if (crux == null) {
                 crop.setCruxBlock(null);
             } else {
-                var block = BuiltInRegistries.BLOCK.get(crux);
+                var block = BuiltInRegistries.BLOCK.getValue(crux);
                 if (block != Blocks.AIR) {
                     crop.setCruxBlock(() -> block);
                 } else {

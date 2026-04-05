@@ -8,7 +8,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.Permissions;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
@@ -21,10 +22,11 @@ public final class ModCommands {
     public void onRegisterCommands(RegisterCommandsEvent event) {
         var dispatcher = event.getDispatcher();
 
-        dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.hasPermission(4)).executes(context -> {
-            var tiers = MysticalAgricultureAPI.getCropRegistry().getTiers().stream()
+        dispatcher.register(ROOT.then(Commands.literal("tiers").requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_ADMIN)).executes(context -> {
+            var tiers = MysticalAgricultureAPI.getCropRegistry().getTiers()
+                    .stream()
                     .map(CropTier::getId)
-                    .map(ResourceLocation::toString)
+                    .map(Identifier::toString)
                     .collect(Collectors.joining("\n"));
 
             context.getSource().sendSuccess(() -> Component.literal(tiers), false);
@@ -32,10 +34,11 @@ public final class ModCommands {
             return 0;
         })));
 
-        dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.hasPermission(4)).executes(context -> {
-            var types = MysticalAgricultureAPI.getCropRegistry().getTypes().stream()
+        dispatcher.register(ROOT.then(Commands.literal("types").requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_ADMIN)).executes(context -> {
+            var types = MysticalAgricultureAPI.getCropRegistry().getTypes()
+                    .stream()
                     .map(CropType::getId)
-                    .map(ResourceLocation::toString)
+                    .map(Identifier::toString)
                     .collect(Collectors.joining("\n"));
 
             context.getSource().sendSuccess(() -> Component.literal(types), false);

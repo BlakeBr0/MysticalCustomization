@@ -11,11 +11,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.neoforged.fml.loading.FMLPaths;
 import org.apache.commons.io.IOUtils;
 
@@ -34,8 +34,8 @@ public final class CropTierLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final String CATEGORY = "Crop Tier";
 
-    public static final Map<CropTier, ResourceLocation> FARMLAND_MAP = new HashMap<>();
-    public static final Map<CropTier, ResourceLocation> ESSENCE_MAP = new HashMap<>();
+    public static final Map<CropTier, Identifier> FARMLAND_MAP = new HashMap<>();
+    public static final Map<CropTier, Identifier> ESSENCE_MAP = new HashMap<>();
 
     public static void onRegisterCrops(ICropRegistry registry) {
         var dir = FMLPaths.CONFIGDIR.get().resolve("mysticalcustomization/tiers/").toFile();
@@ -52,7 +52,7 @@ public final class CropTierLoader {
 
             for (var file : files) {
                 InputStreamReader reader = null;
-                ResourceLocation id = null;
+                Identifier id = null;
                 CropTier tier = null;
 
                 try {
@@ -63,7 +63,7 @@ public final class CropTierLoader {
 
                     try {
                         tier = CropTierCreator.create(id, json);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Creating %s: %s".formatted(id, e.getMessage()));
                     }
 
@@ -99,7 +99,7 @@ public final class CropTierLoader {
                 for (var entry : json.entrySet()) {
                     var id = entry.getKey();
                     var changes = entry.getValue().getAsJsonObject();
-                    var tier = registry.getTierById(ResourceLocation.tryParse(id));
+                    var tier = registry.getTierById(Identifier.tryParse(id));
 
                     try {
                         if (tier == null) {
@@ -107,7 +107,7 @@ public final class CropTierLoader {
                         }
 
                         CropTierModifier.modify(tier, changes);
-                    } catch (JsonSyntaxException | ResourceLocationException e) {
+                    } catch (JsonSyntaxException | IdentifierException e) {
                         ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(id, e.getMessage()));
                     }
                 }
@@ -130,8 +130,8 @@ public final class CropTierLoader {
 
     public static void onCommonSetup() {
         FARMLAND_MAP.forEach((tier, block) -> {
-            var farmland = BuiltInRegistries.BLOCK.get(block);
-            if (farmland instanceof FarmBlock) {
+            var farmland = BuiltInRegistries.BLOCK.getValue(block);
+            if (farmland instanceof FarmlandBlock) {
                 tier.setFarmland(() -> farmland);
             } else {
                 ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(tier.getId(), "Invalid farmland block: %s".formatted(block)));
@@ -139,7 +139,7 @@ public final class CropTierLoader {
         });
 
         ESSENCE_MAP.forEach((tier, item) -> {
-            var essence = BuiltInRegistries.ITEM.get(item);
+            var essence = BuiltInRegistries.ITEM.getValue(item);
             if (essence != Items.AIR) {
                 tier.setEssence(() -> essence);
             } else {

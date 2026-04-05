@@ -6,13 +6,13 @@ import com.blakebr0.mysticalcustomization.loader.CropTierLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.ChatFormatting;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 public final class CropTierCreator {
-    public static CropTier create(ResourceLocation id, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
+    public static CropTier create(Identifier id, JsonObject json) throws JsonSyntaxException, IdentifierException {
         var value = GsonHelper.getAsInt(json, "value");
         var colorString = GsonHelper.getAsString(json, "color", "ffffff");
         var color = ParsingHelper.parseHex(colorString, "color");
@@ -41,12 +41,12 @@ public final class CropTierCreator {
 
         if (json.has("farmland")) {
             var blockId = GsonHelper.getAsString(json, "farmland");
-            CropTierLoader.FARMLAND_MAP.put(tier, ResourceLocation.parse(blockId));
+            CropTierLoader.FARMLAND_MAP.put(tier, Identifier.parse(blockId));
         }
 
         if (json.has("essence")) {
             var itemId = GsonHelper.getAsString(json, "essence");
-            CropTierLoader.ESSENCE_MAP.put(tier, ResourceLocation.parse(itemId));
+            CropTierLoader.ESSENCE_MAP.put(tier, Identifier.parse(itemId));
         }
 
         return tier;

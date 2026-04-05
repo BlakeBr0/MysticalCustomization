@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalcustomization.modify;
 
-import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
@@ -8,16 +7,16 @@ import com.blakebr0.mysticalcustomization.loader.CropLoader;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public final class CropModifier {
-    public static void modify(Crop crop, JsonObject json) throws JsonSyntaxException, ResourceLocationException {
+    public static void modify(Crop crop, JsonObject json) throws JsonSyntaxException, IdentifierException {
         if (json.has("name")) {
             var name = GsonHelper.getAsString(json, "name");
             crop.setDisplayName(Component.literal(name));
@@ -25,7 +24,7 @@ public final class CropModifier {
 
         if (json.has("tier")) {
             var tierId = GsonHelper.getAsString(json, "tier");
-            var tier = MysticalAgricultureAPI.getCropRegistry().getTierById(ResourceLocation.parse(tierId));
+            var tier = MysticalAgricultureAPI.getCropRegistry().getTierById(Identifier.parse(tierId));
             if (tier == null)
                 throw new JsonSyntaxException("Invalid crop tier provided: " + tierId);
 
@@ -34,7 +33,7 @@ public final class CropModifier {
 
         if (json.has("type")) {
             var typeId = GsonHelper.getAsString(json, "type");
-            var type = MysticalAgricultureAPI.getCropRegistry().getTypeById(ResourceLocation.parse(typeId));
+            var type = MysticalAgricultureAPI.getCropRegistry().getTypeById(Identifier.parse(typeId));
             if (type == null)
                 throw new JsonSyntaxException("Invalid crop type provided: " + typeId);
 
@@ -83,7 +82,7 @@ public final class CropModifier {
                 CropLoader.CRUX_MAP.put(crop, null);
             } else {
                 var crux = GsonHelper.getAsString(json, "crux");
-                CropLoader.CRUX_MAP.put(crop, ResourceLocation.parse(crux));
+                CropLoader.CRUX_MAP.put(crop, Identifier.parse(crux));
             }
         }
 
@@ -96,13 +95,13 @@ public final class CropModifier {
             var biomes = GsonHelper.getAsJsonArray(json, "biomes");
 
             biomes.forEach(biome -> {
-                crop.addRequiredBiome(ResourceLocation.parse(biome.getAsString()));
+                crop.addRequiredBiome(Identifier.parse(biome.getAsString()));
             });
         }
 
         if (json.has("essence")) {
             var essence = GsonHelper.getAsString(json, "essence");
-            var item = DeferredHolder.create(Registries.ITEM, ResourceLocation.parse(essence));
+            var item = DeferredHolder.create(Registries.ITEM, Identifier.parse(essence));
 
             crop.setEssenceItem(item);
         }

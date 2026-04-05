@@ -16,12 +16,12 @@ public final class ErrorManager {
     private final Map<String, List<String>> errors = new HashMap<>();
 
     public void addError(String category, String message) {
-        this.errors.computeIfAbsent(category, k -> new ArrayList<>()).add(message);
+        this.errors.computeIfAbsent(category, _ -> new ArrayList<>()).add(message);
         MysticalCustomization.LOGGER.error("Error ({}): {}", category, message);
     }
 
     public void addFatalError(String category, String message, Exception exception) {
-        this.errors.computeIfAbsent(category, k -> new ArrayList<>()).add(message + " Check the log for more information.");
+        this.errors.computeIfAbsent(category, _ -> new ArrayList<>()).add(message + " Check the log for more information.");
         MysticalCustomization.LOGGER.error(message, exception);
     }
 
