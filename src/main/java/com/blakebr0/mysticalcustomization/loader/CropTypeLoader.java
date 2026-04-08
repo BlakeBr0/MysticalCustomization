@@ -130,7 +130,7 @@ public final class CropTypeLoader {
         CRAFTING_SEED_MAP.forEach((type, item) -> {
             var craftingSeed = BuiltInRegistries.ITEM.getValue(item);
             if (craftingSeed != Items.AIR) {
-                type.setCraftingSeed(() -> craftingSeed);
+                type.setCraftingSeedItem(() -> craftingSeed);
             } else {
                 ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(type, "Invalid crafting seed item: %s".formatted(item)));
             }

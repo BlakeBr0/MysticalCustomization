@@ -132,7 +132,7 @@ public final class CropTierLoader {
         FARMLAND_MAP.forEach((tier, block) -> {
             var farmland = BuiltInRegistries.BLOCK.getValue(block);
             if (farmland instanceof FarmlandBlock) {
-                tier.setFarmland(() -> farmland);
+                tier.setFarmlandBlock(() -> farmland);
             } else {
                 ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(tier.getId(), "Invalid farmland block: %s".formatted(block)));
             }
@@ -141,7 +141,7 @@ public final class CropTierLoader {
         ESSENCE_MAP.forEach((tier, item) -> {
             var essence = BuiltInRegistries.ITEM.getValue(item);
             if (essence != Items.AIR) {
-                tier.setEssence(() -> essence);
+                tier.setEssenceItem(() -> essence);
             } else {
                 ErrorManager.INSTANCE.addError(CATEGORY, "Modifying %s: %s".formatted(tier.getId(), "Invalid essence item: %s".formatted(item)));
             }
