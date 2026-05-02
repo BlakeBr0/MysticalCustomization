@@ -3,7 +3,7 @@ package com.blakebr0.mysticalcustomization.create;
 import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
-import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
+import com.blakebr0.mysticalagriculture.api.crop.CropModels;
 import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.crop.CropType;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
@@ -80,10 +80,10 @@ public final class CropCreator {
             }
         }
 
-        var ctextures = crop.getTextures()
-                .setFlowerTexture(CropTextures.FLOWER_INGOT_BLANK)
-                .setEssenceTexture(CropTextures.ESSENCE_INGOT_BLANK)
-                .setSeedTexture(CropTextures.SEED_BLANK);
+        var ctextures = crop.getModels()
+                .setFlowerModel(CropModels.FLOWER_INGOT_BLANK)
+                .setEssenceModel(CropModels.ESSENCE_INGOT_BLANK)
+                .setSeedModel(CropModels.SEED_BLANK);
 
         if (json.has("textures")) {
             var textures = GsonHelper.getAsJsonObject(json, "textures");
@@ -91,21 +91,21 @@ public final class CropCreator {
                 var texture = GsonHelper.getAsString(textures, "flower");
                 var location = Identifier.parse(texture);
 
-                ctextures.setFlowerTexture(location);
+                ctextures.setFlowerModel(location);
             }
 
             if (textures.has("essence")) {
                 var texture = GsonHelper.getAsString(textures, "essence");
                 var location = Identifier.parse(texture);
 
-                ctextures.setEssenceTexture(location);
+                ctextures.setEssenceModel(location);
             }
 
             if (textures.has("seeds")) {
                 var texture = GsonHelper.getAsString(textures, "seeds");
                 var location = Identifier.parse(texture);
 
-                ctextures.setSeedTexture(location);
+                ctextures.setSeedModel(location);
             }
         }
 
