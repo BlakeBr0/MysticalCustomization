@@ -62,13 +62,13 @@ public final class CropModifier {
             crop.setCraftingMaterial(material);
         }
 
-        if (json.has("baseSecondaryChance")) {
-            var chance = GsonHelper.getAsDouble(json, "baseSecondaryChance");
+        if (json.has("base_secondary_chance")) {
+            var chance = GsonHelper.getAsDouble(json, "base_secondary_chance");
             crop.setBaseSecondaryChance(chance);
         }
 
-        if (json.has("respectsEffectiveFarmland")) {
-            var respects = GsonHelper.getAsBoolean(json, "respectsEffectiveFarmland");
+        if (json.has("respects_effective_farmland")) {
+            var respects = GsonHelper.getAsBoolean(json, "respects_effective_farmland");
             crop.setRespectsEffectiveFarmland(respects);
         }
 

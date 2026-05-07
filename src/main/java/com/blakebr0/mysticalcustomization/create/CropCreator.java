@@ -85,24 +85,24 @@ public final class CropCreator {
                 .setEssenceModel(CropModels.ESSENCE_INGOT_BLANK)
                 .setSeedModel(CropModels.SEED_BLANK);
 
-        if (json.has("textures")) {
-            var textures = GsonHelper.getAsJsonObject(json, "textures");
-            if (textures.has("flower")) {
-                var texture = GsonHelper.getAsString(textures, "flower");
+        if (json.has("models")) {
+            var models = GsonHelper.getAsJsonObject(json, "models");
+            if (models.has("flower")) {
+                var texture = GsonHelper.getAsString(models, "flower");
                 var location = Identifier.parse(texture);
 
                 ctextures.setFlowerModel(location);
             }
 
-            if (textures.has("essence")) {
-                var texture = GsonHelper.getAsString(textures, "essence");
+            if (models.has("essence")) {
+                var texture = GsonHelper.getAsString(models, "essence");
                 var location = Identifier.parse(texture);
 
                 ctextures.setEssenceModel(location);
             }
 
-            if (textures.has("seeds")) {
-                var texture = GsonHelper.getAsString(textures, "seeds");
+            if (models.has("seeds")) {
+                var texture = GsonHelper.getAsString(models, "seeds");
                 var location = Identifier.parse(texture);
 
                 ctextures.setSeedModel(location);
@@ -114,13 +114,13 @@ public final class CropCreator {
             crop.setDisplayName(Component.literal(name));
         }
 
-        if (json.has("baseSecondaryChance")) {
-            var chance = GsonHelper.getAsDouble(json, "baseSecondaryChance");
+        if (json.has("base_secondary_chance")) {
+            var chance = GsonHelper.getAsDouble(json, "base_secondary_chance");
             crop.setBaseSecondaryChance(chance);
         }
 
-        if (json.has("respectsEffectiveFarmland")) {
-            var respects = GsonHelper.getAsBoolean(json, "respectsEffectiveFarmland");
+        if (json.has("respects_effective_farmland")) {
+            var respects = GsonHelper.getAsBoolean(json, "respects_effective_farmland");
             crop.setRespectsEffectiveFarmland(respects);
         }
 

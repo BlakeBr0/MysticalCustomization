@@ -4,7 +4,7 @@
   "type": "mysticalagriculture:resource",
   "tier": "mysticalagriculture:1",
   "color": "FF69B4",
-  "textures": {
+  "models": {
     "flower": "mysticalagriculture:block/flower_dust",
     "essence": "mysticalagriculture:item/essence_dust"
   }

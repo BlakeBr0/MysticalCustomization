@@ -15,7 +15,7 @@ public final class CropTypeCreator {
 
         var type = new CropType(Identifier.parse(name), Identifier.parse(stem));
 
-        if (json.has("craftingSeed")) {
+        if (json.has("crafting_seed")) {
             var itemId = GsonHelper.getAsString(json, "craftingSeed");
             CropTypeLoader.CRAFTING_SEED_MAP.put(type, Identifier.parse(itemId));
         }

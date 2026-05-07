@@ -1,5 +1,5 @@
 {
   "mysticalagriculture:resource": {
-    "craftingSeed": "minecraft:carrot"
+    "crafting_seed": "minecraft:carrot"
   }
 }

@@ -10,7 +10,7 @@
     "essences": "eeeeee",
     "seeds": "eeeeee"
   },
-  "textures": {
+  "models": {
     "flower": "mysticalagriculture:block/flower_dust",
     "essence": "mysticalagriculture:item/essence_flame",
     "seeds": "mysticalagriculture:item/mystical_seeds"

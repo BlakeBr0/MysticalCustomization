@@ -11,7 +11,7 @@
     }
   },
   "color": "FFFFFF",
-  "textures": {
+  "models": {
     "flower": "mysticalagriculture:block/flower_dust",
     "essence": "mysticalagriculture:item/essence_dust",
     "seeds": "mysticalagriculture:item/mystical_seeds"

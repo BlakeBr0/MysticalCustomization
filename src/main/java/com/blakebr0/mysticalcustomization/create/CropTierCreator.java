@@ -29,13 +29,13 @@ public final class CropTierCreator {
             tier.setFertilizable(fertilizable);
         }
 
-        if (json.has("secondarySeedDrop")) {
-            var secondarySeedDrop = GsonHelper.getAsBoolean(json, "secondarySeedDrop");
+        if (json.has("secondary_seed_drop")) {
+            var secondarySeedDrop = GsonHelper.getAsBoolean(json, "secondary_seed_drop");
             tier.setSecondarySeedDrop(secondarySeedDrop);
         }
 
-        if (json.has("baseSecondaryChance")) {
-            var chance = GsonHelper.getAsDouble(json, "baseSecondaryChance");
+        if (json.has("base_secondary_chance")) {
+            var chance = GsonHelper.getAsDouble(json, "base_secondary_chance");
             tier.setBaseSecondaryChance(chance);
         }
 
