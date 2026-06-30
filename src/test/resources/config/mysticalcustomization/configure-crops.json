@@ -12,10 +12,12 @@
   "mysticalagriculture:spider": {
     "tier": "mysticalagriculture:5",
     "ingredient": {
-      "item":"mysticalagriculture:soul_jar",
-      "nbt": {
-        "Type": "mysticalagriculture:skeleton",
-        "Souls": 5.0
+      "item": "mysticalagriculture:soul_jar",
+      "components": {
+        "mysticalagriculture:soul_jar": {
+          "type": "mysticalagriculture:skeleton",
+          "souls": 5.0
+        }
       }
     }
   },
